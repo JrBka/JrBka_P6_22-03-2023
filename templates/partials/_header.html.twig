@@ -1,0 +1,44 @@
+{% block header %}
+    <nav class="navbar navbar-expand-lg d-none d-lg-flex navbar-dark bg-primary fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ path('app_home') }}"><font style="vertical-align: inherit;">Logo</font></a>
+            <div class="" id="navbarColor01">
+                <ul class="navbar-nav me-5">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_home') }}"><font style="vertical-align: inherit;">Accueil</font></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#tricks"><font style="vertical-align: inherit;">Tricks</font></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href=""><font style="vertical-align: inherit;">S'inscrire</font></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href=""><font style="vertical-align: inherit;">Se connecter</font></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <nav class="d-lg-none navbar-dark bg-primary fixed-bottom">
+        <div class="container-fluid">
+            <div class="" id="navbarColor01">
+                <ul class="navbar-nav flex-row justify-content-around p-4">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_home') }}"><i class="fa-sharp fa-solid fa-house-chimney fa-2xl"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#tricks"><i class="fa-solid fa-bookmark fa-2xl"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href=""><i class="fa-solid fa-right-to-bracket fa-2xl"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href=""><i class="fa-solid fa-right-from-bracket fa-2xl"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock %}            
