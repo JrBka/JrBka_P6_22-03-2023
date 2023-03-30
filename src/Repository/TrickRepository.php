@@ -39,6 +39,23 @@ class TrickRepository extends ServiceEntityRepository
         }
     }
 
+    public function findTricksPaginated(int $limit): array {
+
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('tricks')
+            ->from('App:Trick','tricks')
+            ->setMaxResults($limit);
+
+        $data = $query->getQuery()->getResult();
+
+        if (empty($data)){
+            return [];
+        }else{
+            return $data;
+        }
+    }
+
+
 //    /**
 //     * @return Trick[] Returns an array of Trick objects
 //     */

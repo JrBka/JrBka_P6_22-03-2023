@@ -12,10 +12,23 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home', methods: ['GET'])]
     public function index(TrickRepository $trickRepository): Response
     {
-        $tricks = $trickRepository->findAll();
+
+        $tricks = $trickRepository->findTricksPaginated(15);
 
         return $this->render('home/index.html.twig', [
             'tricks' => $tricks
         ]);
     }
+
+    #[Route('/tricks', name: 'app_home_tricks', methods: ['GET'])]
+    public function getTricks(TrickRepository $trickRepository): Response{
+
+        $tricks = $trickRepository->findAll();
+
+        return $this->render('home/index.html.twig',[
+            'tricks'=>$tricks
+        ]);
+    }
+
 }
+

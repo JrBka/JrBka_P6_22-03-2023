@@ -8,7 +8,7 @@
                         <a class="nav-link" href="{{ path('app_home') }}"><font style="vertical-align: inherit;">Accueil</font></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/#tricks"><font style="vertical-align: inherit;">Tricks</font></a>
+                        <a class="nav-link" href="{{ path('app_home_tricks') }}#tricks"><font style="vertical-align: inherit;">Tricks</font></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href=""><font style="vertical-align: inherit;">S'inscrire</font></a>
@@ -21,21 +21,21 @@
         </div>
     </nav>
 
-    <nav class="d-lg-none navbar-dark bg-primary fixed-bottom">
+    <nav class="d-lg-none navbar-dark bg-primary fixed-bottom mt-5">
         <div class="container-fluid">
             <div class="" id="navbarColor01">
-                <ul class="navbar-nav flex-row justify-content-around p-4">
+                <ul class="navbar-nav flex-row justify-content-around p-2 p-md-4">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_home') }}"><i class="fa-sharp fa-solid fa-house-chimney fa-2xl"></i></a>
+                        <a class="nav-link" href="{{ path('app_home') }}"><i class="fa-sharp fa-solid fa-house-chimney fa-xl fa-md-2xl"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/#tricks"><i class="fa-solid fa-bookmark fa-2xl"></i></a>
+                        <a class="nav-link" href="{{ path('app_home_tricks') }}"><i class="fa-solid fa-bookmark fa-xl fa-md-2xl"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href=""><i class="fa-solid fa-right-to-bracket fa-2xl"></i></a>
+                        <a class="nav-link" href=""><i class="fa-solid fa-right-to-bracket fa-xl fa-md-2xl"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href=""><i class="fa-solid fa-right-from-bracket fa-2xl"></i></a>
+                        <a class="nav-link" href=""><i class="fa-solid fa-right-from-bracket fa-xl fa-md-2xl"></i></a>
                     </li>
                 </ul>
             </div>

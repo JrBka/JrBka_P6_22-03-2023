@@ -4,29 +4,46 @@
 
 {% block body %}
     <section class="vh-100 position-relative" style="background: center/ cover no-repeat url('{{ asset('images/hero.jpg') }}')" id="hero">
-        <div class=" px-4 px-lg-5 h-100 w-100 d-flex justify-content-center align-items-center" style="background-color: black; opacity: 0.7">
-                <div class="col-md-10 col-lg-8 col-xl-7" >
+        <div class=" px-4 px-lg-5 h-100 mw-100 d-flex justify-content-center align-items-center" style="background-color: black; opacity: 0.7">
+                <div class="col-md-10 col-lg-8 col-xl-7 mw-100">
                     <div>
-                        <h1 class="text-primary text-center" style="font-size: 96px; font-weight: bold;">SNOWTRICKS</h1>
-                        <p class="text-light text-center" style="font-size: 20px; font-weight: bold;" >Bonjour je suis Jimmy Sweat, un passionné de snowboard.
+                        <h1 class="text-primary text-center font-weight-bold mw-100" style="font-size: 86px;">SNOW TRICKS</h1>
+                        <p class="text-light text-center font-weight-bold" style="font-size: 20px;" >Bonjour je suis Jimmy Sweat, un passionné de snowboard.
                             L'objectif de ce site est de partager ma passion et aider à l'apprentissage des figures (tricks).</p>
                     </div>
                 </div>
 
-            <a href="#tricks"><button type="button" class="position-absolute btn btn-outline-primary rounded-circle p-3"
+            <a href="#tricks"><button type="button" class="position-absolute btn btn-outline-primary rounded-circle p-3 bottom"
                        style="bottom: 15vh; right: 5vw" ><i class="fa-solid fa-arrow-down fa-2xl"></i></button></a>
         </div>
     </section>
-    <section class="mt-4" id="tricks">
+
+    <section class="py-5 mb-5 mb-lg-0" id="tricks">
         <div class="d-flex justify-content-around flex-wrap">
             {% for trick in tricks %}
-                <a href="#" class="card m-2 col-2 text-decoration-none">
-                    <img class="w-100 h-100" src="{{ trick.picture ?: asset('images/snowboard.jpg') }}" alt="snowboard-trick">
-                    <div class="card-footer bg-dark text-light">
+                <a href="#" class="card my-4 mx-1 col-10 col-xl-2 text-decoration-none">
+                    <img class="w-100 h-100" src="{{ trick.picture ? asset('images/'~trick.picture) : asset('images/snowboard.jpg') }}" alt="snowboard-trick">
+                    <div class="card-footer d-flex justify-content-between bg-dark text-light">
+                        <div>
                         {{ trick.name }}
+                        </div>
+                        <div>
+                            <i class="fa-solid fa-pencil"></i>
+                            <i class="fa-solid fa-trash-can"></i>
+                        </div>
                     </div>
                 </a>
             {% endfor %}
+        </div>
+        <div class="m-auto d-flex justify-content-center mt-4">
+
+            {% if tricks|length <= 15 %}
+                <a href="{{ path('app_home_tricks') }}" class="mb-3 mb-lg-0"><button type="button" class="btn btn-outline-primary">Afficher plus</button></a>
+            {% else %}
+                <a href="#tricks"><button type="button" class="btn btn-outline-primary rounded-circle position-fixed"
+                                          style="bottom: 8vh; right: 5vw; width: 58px; height: 58px" ><i class="fa-solid fa-arrow-up fa-2xl"></i></button></a>
+            {% endif %}
+
         </div>
     </section>
 {% endblock %}
