@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une figure{% endblock %}
+
+{% block body %}
+
+    <section class="d-flex flex-column align-items-center vh-100 ">
+        <h1 class="my-5" >AJOUTER UNE FIGURE</h1>
+        <div class="col-8 col-lg-6">
+            {{ form_start(form) }}
+
+            <div class="form-group">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name) }}
+                <div class="form-error text-danger">
+                {{ form_errors(form.name) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description) }}
+                <div class="form-error text-danger">
+                    {{ form_errors(form.description) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.tricksGroup) }}
+                {{ form_widget(form.tricksGroup) }}
+                <div class="form-error text-danger">
+                    {{ form_errors(form.tricksGroup) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.image) }}
+                {{ form_widget(form.image) }}
+                <div class="form-error text-danger">
+                    {{ form_errors(form.image) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.video) }}
+                {{ form_widget(form.video) }}
+                <div class="form-error text-danger">
+                    {{ form_errors(form.video) }}
+                </div>
+            </div>
+
+            <div class="mb-4 ms-4"><small>Les noms de champs comportant un astérisque ( * ) sont requis</small></div>
+
+            <div class="form-group">
+                {{ form_row(form.submit) }}
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </section>
+
+{% endblock %}

@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[UniqueEntity(['id', 'name'])]
+#[UniqueEntity('name')]
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
 
 class Trick

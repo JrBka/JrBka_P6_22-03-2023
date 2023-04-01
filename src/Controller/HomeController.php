@@ -20,15 +20,5 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/tricks', name: 'app_home_tricks', methods: ['GET'])]
-    public function getTricks(TrickRepository $trickRepository): Response{
-
-        $tricks = $trickRepository->findAll();
-
-        return $this->render('home/index.html.twig',[
-            'tricks'=>$tricks
-        ]);
-    }
-
 }
 

@@ -20,4 +20,5 @@
 ###< symfony/phpunit-bridge ###
 
 .env.test
-
+.idea
+/public/images
