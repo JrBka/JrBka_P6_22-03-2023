@@ -20,7 +20,7 @@ class AppFixtures extends Fixture
         $trick->setTricksGroup('Grabs');
         $trick->setName('Mute');
         $trick->setDescription('saisie de la carre frontside de la planche entre les deux pieds avec la main avant');
-        $trick->setPicture('mute.jpg');
+        $trick->setPicture(['mute.jpg']);
 
         $manager->persist($trick);
 

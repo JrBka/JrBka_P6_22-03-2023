@@ -14,7 +14,7 @@
                 </div>
 
             <a href="#tricks"><button type="button" class="position-absolute btn btn-outline-primary rounded-circle p-3 bottom"
-                       style="bottom: 15vh; right: 5vw" ><i class="fa-solid fa-arrow-down fa-2xl"></i></button></a>
+                       style="bottom: 20vh; right: 5vw" ><i class="fa-solid fa-arrow-down fa-2xl"></i></button></a>
         </div>
     </section>
 
@@ -29,8 +29,9 @@
         </div>
         <div class="d-flex justify-content-around flex-wrap">
             {% for trick in tricks %}
+
                 <a href="#" class="card my-4 mx-1 col-10 col-xl-2 text-decoration-none">
-                    <img class="w-100 h-100" src="{{ trick.picture ? asset('images/'~trick.picture) : asset('images/snowboard.jpg') }}" alt="snowboard-trick">
+                    <img class="w-100 h-100" src="{{ trick.picture ? asset('images/'~trick.picture[random(0,trick.picture|length - 1)]) : asset('images/snowboard.jpg') }}" alt="snowboard-trick">
                     <div class="card-footer d-flex justify-content-between bg-dark text-light">
                         <div>
                         {{ trick.name }}
@@ -41,13 +42,14 @@
                         </div>
                     </div>
                 </a>
+
             {% endfor %}
         </div>
         <div class="m-auto d-flex justify-content-center mt-4">
 
-            {% if tricks|length <= 15 %}
+            {% if tricks|length == 15 %}
                 <a href="{{ path('app_tricks') }}" class="mb-3 mb-lg-0"><button type="button" class="btn btn-outline-primary">Afficher plus</button></a>
-            {% else %}
+            {% elseif tricks|length > 15 %}
                 <a href="#tricks"><button type="button" class="btn btn-outline-primary rounded-circle position-fixed"
                                           style="bottom: 8vh; right: 5vw; width: 58px; height: 58px" ><i class="fa-solid fa-arrow-up fa-2xl"></i></button></a>
             {% endif %}

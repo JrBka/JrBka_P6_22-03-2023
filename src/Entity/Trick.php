@@ -33,12 +33,10 @@ class Trick
     #[Assert\Length(max: 50)]
     private ?string $tricksGroup = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Length(max: 255)]
-    private ?string $picture = null;
+    #[ORM\Column(nullable: true)]
+    private ?array $picture = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Length(max: 255)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $video = null;
 
     #[ORM\Column]
@@ -93,12 +91,12 @@ class Trick
         return $this;
     }
 
-    public function getPicture(): ?string
+    public function getPicture(): ?array
     {
         return $this->picture;
     }
 
-    public function setPicture(?string $picture): self
+    public function setPicture(?array $picture): self
     {
         $this->picture = $picture;
 

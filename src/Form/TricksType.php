@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class TricksType extends AbstractType
@@ -22,7 +23,7 @@ class TricksType extends AbstractType
                 'attr'=>[
                     'class'=> 'form-control mb-4'
                 ],
-                'label'=>'* Nom',
+                'label'=>'Nom *',
                 'label_attr'=>[
                     'class'=>'form-label'
                 ],
@@ -35,7 +36,7 @@ class TricksType extends AbstractType
                 'attr'=>[
                     'class'=> 'form-control mb-4'
                 ],
-                'label'=>'* Description',
+                'label'=>'Description * ',
                 'label_attr'=>[
                     'class'=>'form-label'
                 ],
@@ -47,7 +48,7 @@ class TricksType extends AbstractType
                 'attr'=>[
                     'class'=> 'form-control mb-4'
                 ],
-                'label'=>'* Groupe',
+                'label'=>'Groupe *',
                 'label_attr'=>[
                     'class'=>'form-label'
                 ],
@@ -56,9 +57,11 @@ class TricksType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
-            ->add('image', FileType::class, [
+            ->add('images', FileType::class, [
+                'multiple' => true,
                 'attr'=>[
-                    'class'=> 'form-control mb-4'
+                    'class'=> 'form-control mb-4',
+                    'multiple'=>true
                 ],
                 'label'=>"Image aux formats ( '.png'  .'jpeg'  '.webp' )",
                 'label_attr'=>[
@@ -67,6 +70,8 @@ class TricksType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
+                    new All([
+
                     new File([
                         'maxSize' => '1024k',
                         'mimeTypes' => [
@@ -76,9 +81,10 @@ class TricksType extends AbstractType
                         ],
                         'mimeTypesMessage' => 'Format d\'image invalide',
                     ])
-                ],
+                    ])
+                ]
             ])
-            ->add('video',TextType::class,[
+            ->add('video',TextareaType::class,[
                 'required'=>false,
                 'attr'=>[
                     'class'=> 'form-control mb-4'
@@ -86,9 +92,6 @@ class TricksType extends AbstractType
                 'label'=>'Vidéo ( balise embed )',
                 'label_attr'=>[
                     'class'=>'form-label'
-                ],
-                'constraints'=>[
-                    new Assert\Length(['max'=>255])
                 ]
             ])
             ->add('submit',SubmitType::class,[

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
+
 
 class TricksController extends AbstractController
 {
@@ -27,34 +27,52 @@ class TricksController extends AbstractController
     }
 
     #[Route('/tricks/create', name: 'app_tricks_createtrick', methods: ['GET','POST'])]
-    public function createTrick(Request $request, EntityManagerInterface $manager, SluggerInterface $slugger): Response{
+    public function createTrick(Request $request, EntityManagerInterface $manager): Response{
 
         $trick = new Trick();
-        $form = $this->createForm(TricksType::class,$trick);
 
+        $form = $this->createForm(TricksType::class,$trick);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()){
+
             $trick = $form->getData();
 
-            $picture = $form->get('image')->getData();
+            $picture = $form->get('images')->getData();
+
+            $video = $form->get('video')->getData();
 
             if ($picture){
 
-                $originalFilename = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$picture->guessExtension();
+                $newFilesName = [];
 
-                try {
-                    $picture->move(
-                        $this->getParameter('images_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    echo $e->getMessage();
+                foreach ($picture as $image){
+
+                        $newFilename = time() . uniqid().'.'.$image->guessExtension();
+                        $newFilesName [] = $newFilename;
+
+                    try {
+                        $image->move(
+                            $this->getParameter('images_directory'),
+                            $newFilename
+
+                        );
+                    } catch (FileException $e) {
+                        echo $e->getMessage();
+                    }
                 }
 
-                $trick->setPicture($newFilename);
+
+                $trick->setPicture($newFilesName);
+
+            }
+
+            if ($video){
+
+                $src = explode("src=",$video);
+                $src = explode("\"",$src[1]);
+
+                $trick->setVideo($src[1]);
 
             }
 
