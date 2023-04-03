@@ -36,8 +36,8 @@ class Trick
     #[ORM\Column(nullable: true)]
     private ?array $picture = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $video = null;
+    #[ORM\Column(nullable: true)]
+    private ?array $video = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -103,12 +103,12 @@ class Trick
         return $this;
     }
 
-    public function getVideo(): ?string
+    public function getVideo(): ?array
     {
         return $this->video;
     }
 
-    public function setVideo(?string $video): self
+    public function setVideo(?array $video): self
     {
         $this->video = $video;
 

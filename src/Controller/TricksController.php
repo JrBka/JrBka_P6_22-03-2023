@@ -26,6 +26,19 @@ class TricksController extends AbstractController
         ]);
     }
 
+    #[Route('/tricks/details/{slug}', name: 'app_tricks_getonetrick', methods: ['GET'])]
+    public function getOneTrick(TrickRepository $trickRepository, Request $request):Response{
+
+        $name = $request->attributes->get('slug');
+
+        $trick = $trickRepository->findOneBy(['name'=>$name]);
+
+        return $this->render('tricks/showTrick.html.twig',[
+            'trick'=>$trick
+        ]);
+
+    }
+
     #[Route('/tricks/create', name: 'app_tricks_createtrick', methods: ['GET','POST'])]
     public function createTrick(Request $request, EntityManagerInterface $manager): Response{
 
@@ -37,6 +50,16 @@ class TricksController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()){
 
             $trick = $form->getData();
+
+            $name = $form->get('name')->getData();
+            $name = ucfirst(strtolower($name));
+
+            $trick->setName($name);
+
+            $groupe = $form->get('tricksGroup')->getData();
+            $groupe = ucfirst(strtolower($groupe));
+
+            $trick->setTricksGroup($groupe);
 
             $picture = $form->get('images')->getData();
 
@@ -72,8 +95,7 @@ class TricksController extends AbstractController
                 $src = explode("src=",$video);
                 $src = explode("\"",$src[1]);
 
-                $trick->setVideo($src[1]);
-
+                $trick->setVideo([$src[1]]);
             }
 
             $manager->persist($trick);
@@ -87,6 +109,8 @@ class TricksController extends AbstractController
         return $this->render('tricks/createTrick.html.twig',[
             'form'=>$form->createView()
         ]);
+
+
 
     }
 

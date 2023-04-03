@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Snowtricks - Accueil{% endblock %}
 
 {% block body %}
     <section class="vh-100 position-relative" style="background: center/ cover no-repeat url('{{ asset('images/hero.jpg') }}')" id="hero">
@@ -27,27 +27,29 @@
         <div class="d-flex justify-content-center mb-4">
             <a href="{{ path('app_tricks_createtrick') }}"><button type="button" class="btn btn-outline-primary">Ajouter une figure</button></a>
         </div>
-        <div class="d-flex justify-content-around flex-wrap">
+        <div class="px-xl-3 d-flex justify-content-start flex-wrap">
             {% for trick in tricks %}
 
-                <a href="#" class="card my-4 mx-1 col-10 col-xl-2 text-decoration-none">
-                    <img class="w-100 h-100" src="{{ trick.picture ? asset('images/'~trick.picture[random(0,trick.picture|length - 1)]) : asset('images/snowboard.jpg') }}" alt="snowboard-trick">
-                    <div class="card-footer d-flex justify-content-between bg-dark text-light">
-                        <div>
-                        {{ trick.name }}
+                <div class="card mx-auto my-4 my-md-2 mx-xl-2 col-10 col-xl-2" style="height: 500px; width: 400px">
+                    <a href="{{ path( 'app_tricks_getonetrick',{'slug':trick.name} ) }}" class="h-100 w-100  text-decoration-none"
+                       style=" background: center/ cover no-repeat url({{ trick.picture ? asset('images/'~trick.picture[0]) : asset('images/snowboard.jpg') }})">
+                        <div class="card-footer d-flex justify-content-between bg-dark text-light">
+                            <div>
+                            {{ trick.name }}
+                            </div>
+                            <div>
+                                <i class="fa-solid fa-pencil"></i>
+                                <i class="fa-solid fa-trash-can"></i>
+                            </div>
                         </div>
-                        <div>
-                            <i class="fa-solid fa-pencil"></i>
-                            <i class="fa-solid fa-trash-can"></i>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
 
             {% endfor %}
         </div>
         <div class="m-auto d-flex justify-content-center mt-4">
 
-            {% if tricks|length == 15 %}
+            {% if tricks|length == 15 and nbTricks > 15 %}
                 <a href="{{ path('app_tricks') }}" class="mb-3 mb-lg-0"><button type="button" class="btn btn-outline-primary">Afficher plus</button></a>
             {% elseif tricks|length > 15 %}
                 <a href="#tricks"><button type="button" class="btn btn-outline-primary rounded-circle position-fixed"

@@ -86,6 +86,7 @@ class TricksType extends AbstractType
             ])
             ->add('video',TextareaType::class,[
                 'required'=>false,
+                'mapped' => false,
                 'attr'=>[
                     'class'=> 'form-control mb-4'
                 ],

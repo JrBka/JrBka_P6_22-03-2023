@@ -13,10 +13,12 @@ class HomeController extends AbstractController
     public function index(TrickRepository $trickRepository): Response
     {
 
+        $nbTricks = sizeof($trickRepository->findAll());
         $tricks = $trickRepository->findTricksPaginated(15);
 
         return $this->render('home/index.html.twig', [
-            'tricks' => $tricks
+            'tricks' => $tricks,
+            'nbTricks' => $nbTricks
         ]);
     }
 
