@@ -1,0 +1,30 @@
+{% if comments %}
+
+    <h2 class="text-center my-4">Commentaires</h2>
+    <div class="p-3 mx-auto w-50 d-flex  justify-content-center flex-wrap border overflow-auto" style="height: 75vh">
+        {% for comment in comments.data %}
+            <div class="card border-primary mb-3 w-100">
+                <div class="card-header d-flex justify-content-between">
+                    <span>{{ comment.userId }}</span>
+                    <span>{{ comment.userId }}</span>
+                    <span>{{ comment.createdAt|date('d-m-Y') }}</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ comment.content }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% set path = 'app_tricks_getonetrick' %}
+    {% set slug = comments.slug %}
+    {% set pages = comments.pages %}
+    {% set currentPage = comments.page %}
+    <div class="m-auto d-flex justify-content-center mt-4">
+        {% include 'partials/_pagination.html.twig' %}
+    </div>
+{% endif %}
+
+
+
+

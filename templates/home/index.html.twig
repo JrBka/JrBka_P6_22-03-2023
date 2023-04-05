@@ -31,7 +31,7 @@
             {% for trick in tricks %}
 
                 <div class="card mx-auto my-4 my-md-2 mx-xl-2 col-10 col-xl-2" style="height: 500px; width: 400px">
-                    <a href="{{ path( 'app_tricks_getonetrick',{'slug':trick.name} ) }}" class="h-100 w-100  text-decoration-none"
+                    <a href="{{ path( 'app_tricks_getonetrick',{'slug':trick.name } ) }}" class="h-100 w-100  text-decoration-none"
                        style=" background: center/ cover no-repeat url({{ trick.picture ? asset('images/'~trick.picture[0]) : asset('images/snowboard.jpg') }})">
                         <div class="card-footer d-flex justify-content-between bg-dark text-light">
                             <div>
@@ -50,7 +50,7 @@
         <div class="m-auto d-flex justify-content-center mt-4">
 
             {% if tricks|length == 15 and nbTricks > 15 %}
-                <a href="{{ path('app_tricks') }}" class="mb-3 mb-lg-0"><button type="button" class="btn btn-outline-primary">Afficher plus</button></a>
+                <a href="{{ path('app_tricks') }}" class="mb-3 mb-lg-0"><button type="button" class="btn btn-outline-primary">Afficher tout</button></a>
             {% elseif tricks|length > 15 %}
                 <a href="#tricks"><button type="button" class="btn btn-outline-primary rounded-circle position-fixed"
                                           style="bottom: 8vh; right: 5vw; width: 58px; height: 58px" ><i class="fa-solid fa-arrow-up fa-2xl"></i></button></a>

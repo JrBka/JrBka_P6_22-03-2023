@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Comment;
 use App\Entity\Trick;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -16,11 +17,26 @@ class AppFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
+
+        $comments = [];
+        for ($j = 0; $j < 25; $j++){
+            $comment = new Comment();
+            $comment->setUserId('12')
+                ->setContent('Si l’utilisateur est authentifié, il peut voir un formulaire au-dessus de la liste avec
+                 un champs “message” qui est obligatoire. L’utilisateur peut poster autant de messages qu’il le souhaite.');
+            $comments [] = $comment;
+            $manager->persist($comment);
+        }
+
+
         $trick = new Trick();
         $trick->setTricksGroup('Grabs');
         $trick->setName('Mute');
         $trick->setDescription('saisie de la carre frontside de la planche entre les deux pieds avec la main avant');
         $trick->setPicture(['mute.jpg']);
+        for ($j = 0; $j < 25; $j++){
+            $trick->addComment($comments[mt_rand(1, count($comments)-1)]);
+        }
 
         $manager->persist($trick);
 
@@ -90,4 +106,7 @@ class AppFixtures extends Fixture
 
         $manager->flush();
     }
+
+
+
 }

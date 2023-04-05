@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TrickRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -10,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[UniqueEntity('name')]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
 
 class Trick
@@ -42,12 +45,26 @@ class Trick
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class)]
+    private Collection $comments;
+
     /**
-     * DateTime constructor
+     * Constructor
      */
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable;
+        $this->updatedAt = new \DateTimeImmutable;
+        $this->comments = new ArrayCollection();
+    }
+
+    #[ORM\PrePersist]
+    public function setUpdatedAtValue()
+    {
+        $this->updatedAt = new \DateTimeImmutable;
     }
 
     public function getId(): ?int
@@ -123,6 +140,48 @@ class Trick
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getTrick() === $this) {
+                $comment->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

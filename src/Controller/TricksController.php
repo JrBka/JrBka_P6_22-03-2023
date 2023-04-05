@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Trick;
 use App\Form\TricksType;
+use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,17 +27,25 @@ class TricksController extends AbstractController
         ]);
     }
 
-    #[Route('/tricks/details/{slug}', name: 'app_tricks_getonetrick', methods: ['GET'])]
-    public function getOneTrick(TrickRepository $trickRepository, Request $request):Response{
+    #[Route('/tricks/details/{slug}', name: 'app_tricks_getonetrick', methods: ['GET','POST'])]
+    public function getOneTrick(TrickRepository $trickRepository,CommentRepository $commentRepository,
+                                CommentsController $commentsController, Request $request, EntityManagerInterface $manager):Response{
 
         $name = $request->attributes->get('slug');
 
         $trick = $trickRepository->findOneBy(['name'=>$name]);
 
-        return $this->render('tricks/showTrick.html.twig',[
-            'trick'=>$trick
-        ]);
+        $page = $request->query->getInt('page',1);
 
+        $comments = $commentsController->getComments($commentRepository,$page,$name);
+
+        $form = $commentsController->createComment($request,$manager,$trickRepository);
+
+        return $this->render('tricks/showTrick.html.twig',[
+            'trick'=>$trick,
+            'comments'=>$comments,
+            'form'=>$form
+        ]);
     }
 
     #[Route('/tricks/create', name: 'app_tricks_createtrick', methods: ['GET','POST'])]

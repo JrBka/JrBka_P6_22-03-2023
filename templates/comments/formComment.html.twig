@@ -1,0 +1,25 @@
+
+        <section class="d-flex flex-column align-items-center">
+            <h2 class="my-5" >Ajouter un commentaire</h2>
+            <div class="col-8 col-lg-6">
+
+                {{ form_start(form,{'action': path('app_comments_createcomment',{'userId':77,'trick':trick.name}), 'method': 'POST'}) }}
+
+                <div class="form-group">
+                    {{ form_label(form.content) }}
+                    {{ form_widget(form.content) }}
+                    <div class="form-error text-danger">
+                        {{ form_errors(form.content) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_row(form.submit) }}
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </section>
+
+
+

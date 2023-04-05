@@ -45,8 +45,6 @@
                         </div>
                     </div>
                     {% endfor %}
-
-
                 </div>
             {% endif %}
 
@@ -55,22 +53,32 @@
                 <div class="p-lg-2 d-flex justify-content-center justify-content-md-start flex-wrap border">
                     {% for video in trick.video %}
                         <iframe class="my-2 mx-1 mx-lg-2 col-10 col-lg-3" style="height: 300px; width: 400px; " src="{{ video }}" allowfullscreen></iframe>
-                        <iframe class="my-2 mx-1 mx-lg-2 col-10 col-lg-3" style="height: 300px; width: 400px; " src="{{ video }}" allowfullscreen></iframe>
-                        <iframe class="my-2 mx-1 mx-lg-2 col-10 col-lg-3" style="height: 300px; width: 400px; " src="{{ video }}" allowfullscreen></iframe>
-                        <iframe class="my-2 mx-1 mx-lg-2 col-10 col-lg-3" style="height: 300px; width: 400px; " src="{{ video }}" allowfullscreen></iframe>
-                        <iframe class="my-2 mx-1 mx-lg-2 col-10 col-lg-3" style="height: 300px; width: 400px; " src="{{ video }}" allowfullscreen></iframe>
                     {% endfor %}
 
                 </div>
             {% endif %}
 
-            <div class="container">
+            <div class="container d-flex flex-column align-items-center">
                 <h2 class="text-center my-4">Description de la figure</h2>
                 <p style="font-size: 20px">{{ trick.description }}</p>
                 <div>
                     <p>Cette figure appartient au groupe des : <strong>{{ trick.tricksGroup }}</strong></p>
-                    <p>Figure publiée le <strong>{{ trick.createdAt|date('d/m/Y') }}</strong></p>
+                    <p>Publiée le <strong>{{ trick.createdAt|date('d/m/Y') }}</strong></p>
                 </div>
+            </div>
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success text-center h1">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <div>
+                {% include 'comments/formComment.html.twig' %}
+            </div>
+
+            <div>
+                {% include 'comments/showComments.html.twig' %}
             </div>
 
         </div>
