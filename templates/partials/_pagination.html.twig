@@ -7,7 +7,7 @@
             {% if currentPage > 1 %}
 
                 <li class="page-item">
-                    <a class="page-link" href="{{ path(path, {slug: slug, page: currentPage - 1}) }}"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&laquo;</font></font></a>
+                    <a class="page-link" href="{{ path(path, {slug: slug, page: currentPage - 1})~'#comments' }}"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&laquo;</font></font></a>
                 </li>
 
             {% else %}
@@ -21,7 +21,7 @@
             {% for page in 1..pages %}
 
                 <li class="page-item {{ page == currentPage ? 'active' : '' }} ">
-                    <a href="{{ path(path, { slug: slug, page: page}) }}" class="page-link">{{ page }}</a>
+                    <a href="{{ path(path, { slug: slug, page: page})~'#comments' }}" class="page-link">{{ page }}</a>
                 </li>
 
             {% endfor %}
@@ -29,7 +29,7 @@
             {% if currentPage < pages %}
 
                 <li class="page-item">
-                    <a class="page-link" href="{{ path(path, {slug: slug, page: currentPage + 1}) }}"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&raquo;</font></font></a>
+                    <a class="page-link" href="{{ path(path, {slug: slug, page: currentPage + 1})~'#comments' }}"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&raquo;</font></font></a>
                 </li>
 
             {% else %}

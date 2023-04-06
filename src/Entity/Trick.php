@@ -62,9 +62,9 @@ class Trick
     }
 
     #[ORM\PrePersist]
-    public function setUpdatedAtValue()
+    public function setUpdatedAtValue(): \DateTimeImmutable
     {
-        $this->updatedAt = new \DateTimeImmutable;
+        return $this->updatedAt = new \DateTimeImmutable;
     }
 
     public function getId(): ?int

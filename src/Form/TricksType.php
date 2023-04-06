@@ -34,7 +34,8 @@ class TricksType extends AbstractType
             ])
             ->add('description',TextareaType::class,[
                 'attr'=>[
-                    'class'=> 'form-control mb-4'
+                    'class'=> 'form-control mb-4',
+                    'style'=> 'height:250px'
                 ],
                 'label'=>'Description * ',
                 'label_attr'=>[
@@ -99,7 +100,7 @@ class TricksType extends AbstractType
                 'attr'=>[
                     'class'=>'btn btn-outline-primary px-5'
                 ],
-                'label' => 'Ajouter'
+                'label' => 'Envoyer'
             ])
         ;
     }

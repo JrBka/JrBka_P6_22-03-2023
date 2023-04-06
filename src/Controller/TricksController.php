@@ -100,7 +100,7 @@ class TricksController extends AbstractController
             }
 
             if ($video){
-
+//regex
                 $src = explode("src=",$video);
                 $src = explode("\"",$src[1]);
 
@@ -112,14 +112,93 @@ class TricksController extends AbstractController
 
             $this->addFlash('success','Votre figure a bien été ajouté');
 
-            return $this->redirectToRoute('app_home');
+            return $this->redirect('/#tricks');
         }
 
         return $this->render('tricks/createTrick.html.twig',[
             'form'=>$form->createView()
         ]);
 
+    }
 
+
+    #[Route('/tricks/update/{slug}', name: 'app_tricks_updatetrick', methods: ['GET','POST'])]
+    public function updateTrick(Request $request, EntityManagerInterface $manager, TrickRepository $trickRepository): Response{
+
+        $slug = $request->get('slug');
+
+        $trick = $trickRepository->findOneBy(['name'=>$slug]);
+        $images = $trick->getPicture();
+        $videos = $trick->getVideo();
+
+        $form = $this->createForm(TricksType::class,$trick);
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()){
+
+            $trick = $form->getData();
+
+            $name = $form->get('name')->getData();
+            $name = ucfirst(strtolower($name));
+
+            $trick->setName($name);
+
+            $groupe = $form->get('tricksGroup')->getData();
+            $groupe = ucfirst(strtolower($groupe));
+
+            $trick->setTricksGroup($groupe);
+
+            $picture = $form->get('images')->getData();
+
+            $video = $form->get('video')->getData();
+
+            if ($picture){
+
+                $newFilesName = $images;
+
+                foreach ($picture as $image){
+
+                    $newFilename = time() . uniqid().'.'.$image->guessExtension();
+                    $newFilesName [] = $newFilename;
+
+                    try {
+                        $image->move(
+                            $this->getParameter('images_directory'),
+                            $newFilename
+
+                        );
+                    } catch (FileException $e) {
+                        echo $e->getMessage();
+                    }
+                }
+
+
+                $trick->setPicture($newFilesName);
+
+            }
+
+            if ($video){
+
+                $src = explode("src=",$video);
+                $src = explode("\"",$src[1]);
+                $videos [] = $src[1];
+
+                $trick->setVideo($videos);
+            }
+
+            $manager->persist($trick);
+            $manager->flush();
+
+            $this->addFlash('success','Votre figure a bien été modifié');
+
+            return $this->redirect('/#tricks');
+        }
+
+        return $this->render('tricks/updateTrick.html.twig',[
+            'form'=>$form->createView(),
+            'trick'=>$trick
+        ]);
 
     }
 

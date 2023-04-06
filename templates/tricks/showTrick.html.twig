@@ -9,8 +9,8 @@
             <div class="w-auto m-auto " style="height: 50vh; background: center/ cover no-repeat url({{ trick.picture ? asset('images/'~trick.picture[0]) : asset('images/snowboard.jpg') }})">
                 <div class="position-relative px-4 px-lg-5 h-100 mw-100 d-flex justify-content-center align-items-center" style="background-color: black; opacity: 0.7">
                     <div class="position-absolute " style="top: 5%; right: 5%">
-                        <a href="#"><i class="fa-solid fa-pencil mx-2"></i></a>
-                        <a href="#"><i class="fa-solid fa-trash-can mx-2"></i></a>
+                        <a href="{{ path('app_tricks_updatetrick',{'slug':trick.name}) }}"><i class="fa-solid fa-pencil fa-xl me-3"></i></a>
+                        <a class="text-light" href="#"><i class="fa-solid fa-trash-can fa-xl ms-3"></i></a>
                     </div>
                     <h1 style="font-size: 68px" >{{ trick.name }}</h1>
                 </div>
@@ -68,18 +68,20 @@
             </div>
 
             {% for message in app.flashes('success') %}
-                <div class="alert alert-success text-center h1">
+                <div id="success" class="alert alert-success text-center h1">
                     {{ message }}
                 </div>
             {% endfor %}
+
 
             <div>
                 {% include 'comments/formComment.html.twig' %}
             </div>
 
-            <div>
+            <div id="comments">
                 {% include 'comments/showComments.html.twig' %}
             </div>
+
 
         </div>
     </section>

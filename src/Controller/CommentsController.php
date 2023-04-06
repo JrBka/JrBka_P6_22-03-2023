@@ -24,7 +24,7 @@ class CommentsController extends AbstractController
     #[Route('/comment/create',name: 'app_comments_createcomment',methods: ['POST','GET'])]
     public function createComment(Request $request, EntityManagerInterface $manager,TrickRepository $trickRepository)
     {
-
+//separer la fonction en deux
         $comment = new Comment();
 
         $form = $this->createForm(CommentsType::class, $comment);
@@ -47,10 +47,9 @@ class CommentsController extends AbstractController
 
             $this->addFlash('success', 'Votre commentaire a bien été ajouté');
 
-            return $this->redirectToRoute('app_tricks_getonetrick',['slug'=>$slug]);
+            return $this->redirect('/tricks/details/'.$slug.'#success');
 
         }
-
 
         return $form->createView();
 
