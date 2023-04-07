@@ -25,7 +25,7 @@
             </div>
         {% endfor %}
         <div class="d-flex justify-content-center mb-4">
-            <a href="{{ path('app_tricks_createtrick') }}"><button type="button" class="btn btn-outline-primary">Ajouter une figure</button></a>
+            <a href="{{ path('app_tricks_managetrick',{'slug':'create','name':'new'}) }}"><button type="button" class="btn btn-outline-primary">Ajouter une figure</button></a>
         </div>
         <div class="px-xl-3 d-flex justify-content-start flex-wrap">
             {% for trick in tricks %}
@@ -39,8 +39,8 @@
                             {{ trick.name }}
                             </div>
                             <div>
-                                <a class="me-2" href="{{ path('app_tricks_updatetrick',{'slug':trick.name }) }}"><i class="fa-solid fa-pencil"></i></a>
-                                <a class="ms-2 text-light" href="#"><i class="fa-solid fa-trash-can"></i></a>
+                                <a class="me-2" href="{{ path('app_tricks_managetrick',{'slug':'update','name':trick.name }) }}"><i class="fa-solid fa-pencil"></i></a>
+                                <a class="ms-2 text-light" href="{{ path('app_tricks_managetrick',{'slug':'delete','name':trick.name}) }}"><i class="fa-solid fa-trash-can"></i></a>
                             </div>
                         </div>
                 </div>

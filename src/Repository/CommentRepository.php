@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
+use App\Entity\Trick;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -40,7 +41,7 @@ class CommentRepository extends ServiceEntityRepository
         }
     }
 
-    public function findCommentsPaginated(int $page, int $limit, string $slug): array
+    public function findCommentsPaginated(int $page, int $limit, string $slug, int $trick): array
     {
 
         $result = [];
@@ -48,6 +49,7 @@ class CommentRepository extends ServiceEntityRepository
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('comment')
             ->from('App:Comment', 'comment')
+            ->where('comment.trick = '.$trick)
             ->setMaxResults($limit)
             ->orderBy('comment.createdAt','DESC')
             ->setFirstResult(($page * $limit) - $limit);
