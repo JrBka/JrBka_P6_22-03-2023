@@ -79,8 +79,7 @@ class TricksType extends AbstractType
                             'image/png',
                             'image/jpeg',
                             'image/webp'
-                        ],
-                        'mimeTypesMessage' => 'Format d\'image invalide',
+                        ]
                     ])
                     ])
                 ]

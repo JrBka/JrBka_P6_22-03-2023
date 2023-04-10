@@ -9,34 +9,109 @@
             <div class="w-auto m-auto " style="height: 50vh; background: center/ cover no-repeat url({{ trick.picture ? asset('images/'~trick.picture[0]) : asset('images/snowboard.jpg') }})">
                 <div class="position-relative px-4 px-lg-5 h-100 mw-100 d-flex justify-content-center align-items-center" style="background-color: black; opacity: 0.7">
                     <div class="position-absolute " style="top: 5%; right: 5%">
-                        <a href="#"><i class="fa-solid fa-pencil fa-xl me-3"></i></a>
-                        <a class="text-light" href="#"><i class="fa-solid fa-trash-can fa-xl ms-3"></i></a>
+                        <!-- Button trigger modal update -->
+                        <button type="button" class="btn btn-primary me-2 " data-toggle="modal" data-target="#modalUpdate">
+                            <i class="fa-solid fa-pencil"></i>
+                        </button>
+                        <!-- Button trigger modal delete -->
+                        <button type="button" class="btn btn-danger "  data-toggle="modal" data-target="#modalDelete">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
                     </div>
                     <h1 style="font-size: 68px" >Edition de {{ trick.name }}</h1>
                 </div>
+                <!-- Delete modal -->
+                <div  class="modal fade text-dark" id="modalDelete" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-dark" >Suppression d'image'</h5>
+                            </div>
+                            <div class="modal-body">
+                                Êtes-vous certain de vouloir supprimer cette image ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                                <a class="ms-2 text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'deletePicture','mediaIndex':'0'}) }}"><button type="button" class="btn btn-danger">Supprimer</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <!-- Update modal -->
+            <div  class="modal fade text-dark" id="modalUpdate" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark" >Changement d'image</h5>
+                        </div>
+                        <div class="modal-body">
+                            {{ form_start(updateForm,{'action':path('app_tricks_editmedia',{'trickName':trick.name,'slug':'updatePicture','mediaIndex':'0'}) }) }}
+                            <div class="form-group">
+                                {{ form_label(updateForm.images) }}
+                                {{ form_widget(updateForm.images) }}
+                                <div class="form-error text-danger">
+                                    {{ form_errors(updateForm.images) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            {{ form_row(updateForm.submit) }}
+                            {{ form_end(updateForm) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% for message in app.flashes('success') %}
+                <div id="success" class="alert alert-success text-center h1">
+                    {{ message }}
+                </div>
+            {% endfor %}
             <div class="border-bottom my-4 pb-4">
                 {% if trick.picture %}
 
                     <h2 class="text-center my-4">Modifier les images</h2>
                     <div class="px-2 px-md-5 px-xl-2 d-flex justify-content-start flex-wrap">
 
-                        {% set nb = 1 %}
+                        {% set nb = 0 %}
 
                         {% for picture in trick.picture %}
 
-                            {% set nb = nb + 1 %}
 
                             <div class="card col-12 col-lg-1 mx-auto my-3 m-xl-4" style="width: 300px; height: 400px" >
-                                <a class="h-100 text-decoration-none d-flex justify-content-center overflow-hidden"
+                                <div class="h-100 text-decoration-none d-flex justify-content-center overflow-hidden"
                                    style="background: center/ cover no-repeat url({{ asset('images/'~picture) }})">
-                                    <div class=" card-footer bg-dark d-flex justify-content-end ">
-                                        <a href="#"><i class="fa-solid fa-pencil mx-2"></i></a>
-                                        <a class="text-light" href="#"><i class="fa-solid fa-trash-can mx-2"></i></a>
+                                </div>
+                                <div class=" card-footer bg-dark d-flex justify-content-end ">
+                                    <div>
+                                        <button type="button" class="btn btn-outline-primary text-light me-2 p-0">
+                                            <a class="btn text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'update-picture','mediaIndex':nb}) }}"><i class="fa-solid fa-pencil"></i></a>
+                                        </button>
+                                        <!-- Button trigger modal delete -->
+                                        <button type="button" class="btn btn-outline-danger text-light ms-2"  data-toggle="modal" data-target="#modalDelete{{ nb }}">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
                                     </div>
-                                </a>
+                                </div>
+                                <!-- Delete modal -->
+                                <div  class="modal fade text-dark" id="modalDelete{{ nb }}" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title text-dark" >Suppression d'image</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                Êtes-vous certain de vouloir supprimer cette image ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                                                <a class="ms-2 text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'deletePicture','mediaIndex':nb}) }}"><button type="button" class="btn btn-danger">Supprimer</button></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-
+                            {% set nb = nb + 1 %}
                         {% endfor %}
                     </div>
                 {% endif %}
@@ -57,11 +132,44 @@
             </div>
 
             <div class="border-bottom my-4 pb-4">
+
                 {% if trick.video %}
                     <h2 class="text-center my-4">Modifier les vidéos</h2>
                     <div class="p-lg-2 d-flex justify-content-center justify-content-md-start flex-wrap">
+                        {% set nb = 0 %}
                         {% for video in trick.video %}
-                            <iframe class="my-2 mx-1 mx-lg-2 col-10 col-lg-3" style="height: 300px; width: 400px; " src="{{ video }}" allowfullscreen></iframe>
+                            <div class="card col-12 col-lg-1 mx-auto my-3 m-xl-4" style="width: 300px; height: 400px" >
+                                <iframe class="my-2 mx-1 mx-lg-2 col-10 col-lg-3" style="height: 300px; width: 400px; " src="{{ video }}" allowfullscreen></iframe>
+                                <div class=" card-footer bg-dark d-flex justify-content-end ">
+                                    <div>
+                                        <button type="button" class="btn btn-outline-primary text-light me-2 p-0">
+                                            <a class="btn text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'update-video','mediaIndex':nb}) }}"><i class="fa-solid fa-pencil"></i></a>
+                                        </button>
+                                        <!-- Button trigger modal delete -->
+                                        <button type="button" class="btn btn-outline-danger text-light ms-2"  data-toggle="modal" data-target="#modalDeleteVideo{{ nb }}">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Delete modal -->
+                                <div  class="modal fade text-dark" id="modalDeleteVideo{{ nb }}" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title text-dark" >Suppression de video</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                Êtes-vous certain de vouloir supprimer cette video ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                                                <a class="ms-2 text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'deleteVideo','mediaIndex':nb}) }}"><button type="button" class="btn btn-danger">Supprimer</button></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% set nb = nb + 1 %}
                         {% endfor %}
 
                     </div>
@@ -118,20 +226,33 @@
                     </div>
                 </div>
             </div>
-
-
-                <div class="w-50 mx-auto mb-4 ps-4"><small>Les noms de champs comportant un astérisque ( * ) sont requis</small></div>
-
+            <div class="w-50 mx-auto mb-4 ps-4"><small>Les noms de champs comportant un astérisque ( * ) sont requis</small></div>
             <div class="w-50 mx-auto my-5 d-flex justify-content-end">
                 <div class="form-group me-3">
                     {{ form_row(form.submit) }}
                 </div>
                 <div class="ms-3">
-                    <a href="{{ path('app_tricks_managetrick',{'slug':'delete','name':trick.name}) }}"><button type="button" class="btn btn-outline-danger px-5">Supprimer</button></a>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-danger "  data-toggle="modal" data-target="#modalDelete">Supprimer</button>
+                    <!-- Modal -->
+                    <div  class="modal fade text-dark" id="modalDelete" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-dark" >Suppression de : {{ trick.name }}</h5>
+                                </div>
+                                <div class="modal-body">
+                                    Êtes-vous certain de vouloir supprimer cette figure ?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                                    <a class="ms-2 text-light" href="{{ path('app_tricks_managetrick',{'slug':'delete','name':trick.name}) }}"><button type="button" class="btn btn-danger">Supprimer</button></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-
             {{ form_end(form) }}
         </div>
     </section>

@@ -28,7 +28,11 @@
             <a href="{{ path('app_tricks_managetrick',{'slug':'create','name':'new'}) }}"><button type="button" class="btn btn-outline-primary">Ajouter une figure</button></a>
         </div>
         <div class="px-xl-3 d-flex justify-content-start flex-wrap">
+            {% set nb = 1 %}
+
             {% for trick in tricks %}
+
+                {% set nb = nb + 1 %}
 
                 <div class="card mx-auto my-4 my-md-2 mx-xl-2 col-10 col-xl-2" style="height: 500px; width: 400px">
                     <a href="{{ path( 'app_tricks_getonetrick',{'slug':trick.name } ) }}" class="h-100 w-100  text-decoration-none"
@@ -39,8 +43,30 @@
                             {{ trick.name }}
                             </div>
                             <div>
-                                <a class="me-2" href="{{ path('app_tricks_managetrick',{'slug':'update','name':trick.name }) }}"><i class="fa-solid fa-pencil"></i></a>
-                                <a class="ms-2 text-light" href="{{ path('app_tricks_managetrick',{'slug':'delete','name':trick.name}) }}"><i class="fa-solid fa-trash-can"></i></a>
+                                <button type="button" class="btn btn-outline-primary me-2 p-0">
+                                    <a class=" btn text-light"  href="{{ path('app_tricks_managetrick',{'slug':'update','name':trick.name }) }}"><i class="fa-solid fa-pencil"></i></a>
+                                </button>
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-outline-danger ms-2 text-light"  data-toggle="modal" data-target="#modalDelete{{ nb }}">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                            <!-- Modal -->
+                            <div class="modal fade text-dark" id="modalDelete{{ nb }}" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-dark" >Suppression de : {{ trick.name }}</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            Êtes-vous certain de vouloir supprimer cette figure ?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                                            <a class="ms-2 text-light" href="{{ path('app_tricks_managetrick',{'slug':'delete','name':trick.name}) }}"><button type="button" class="btn btn-danger">Supprimer</button></a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                 </div>

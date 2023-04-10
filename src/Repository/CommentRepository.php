@@ -41,6 +41,15 @@ class CommentRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * This function paginates comments
+     *
+     * @param int $page
+     * @param int $limit
+     * @param string $slug
+     * @param int $trick
+     * @return array
+     */
     public function findCommentsPaginated(int $page, int $limit, string $slug, int $trick): array
     {
 

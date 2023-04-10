@@ -12,22 +12,37 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
 {
+    /**
+     * @var int|null
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    /**
+     * @var int|null
+     */
     #[ORM\Column]
     #[Assert\NotNull]
     private ?int $userId = null;
 
+    /**
+     * @var string|null
+     */
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
     private ?string $content = null;
 
+    /**
+     * @var \DateTimeImmutable|null
+     */
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    /**
+     * @var Trick|null
+     */
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[Assert\NotNull]
     private ?Trick $trick = null;

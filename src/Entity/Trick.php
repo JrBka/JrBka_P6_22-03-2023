@@ -17,37 +17,64 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Trick
 {
+    /**
+     * @var int|null
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    /**
+     * @var string|null
+     */
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 100)]
     private ?string $name = null;
 
+    /**
+     * @var string|null
+     */
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
     private ?string $description = null;
 
+    /**
+     * @var string|null
+     */
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 50)]
     private ?string $tricksGroup = null;
 
+    /**
+     * @var array|null
+     */
     #[ORM\Column(nullable: true)]
     private ?array $picture = null;
 
+    /**
+     * @var array|null
+     */
     #[ORM\Column(nullable: true)]
     private ?array $video = null;
 
+    /**
+     * @var \DateTimeImmutable|null
+     */
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    /**
+     * @var \DateTimeImmutable|null
+     */
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    /**
+     * @var Collection|ArrayCollection
+     */
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class)]
     private Collection $comments;
 
@@ -61,6 +88,9 @@ class Trick
         $this->comments = new ArrayCollection();
     }
 
+    /**
+     * @return \DateTimeImmutable
+     */
     #[ORM\PrePersist]
     public function setUpdatedAtValue(): \DateTimeImmutable
     {

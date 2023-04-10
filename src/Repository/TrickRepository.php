@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Trick;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 /**
  * @extends ServiceEntityRepository<Trick>
@@ -39,6 +40,12 @@ class TrickRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * This function paginates tricks
+     *
+     * @param int $limit
+     * @return array
+     */
     public function findTricksPaginated(int $limit): array {
 
         $query = $this->getEntityManager()->createQueryBuilder()

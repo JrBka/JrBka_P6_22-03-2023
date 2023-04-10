@@ -16,12 +16,27 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CommentsController extends AbstractController
 {
+    /**
+     * This function show comments
+     *
+     * @param CommentRepository $commentRepository
+     * @param int $page
+     * @param string $slug
+     * @param int $trick
+     * @return array
+     */
     public function getComments(CommentRepository $commentRepository, int $page, string $slug,int $trick):array
     {
+        //Comments pagination
         $comments = $commentRepository->findCommentsPaginated($page,10,$slug,$trick);
         return $comments;
     }
 
+    /**
+     * This function create a form
+     *
+     * @return FormView
+     */
     public function createFormComment(): FormView
     {
         $comment = new Comment();
@@ -32,6 +47,14 @@ class CommentsController extends AbstractController
 
     }
 
+    /**
+     * This function create comments
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param TrickRepository $trickRepository
+     * @return Response
+     */
     #[Route('/comment/create',name: 'app_comments_createcomment',methods: ['POST','GET'])]
     public function createComment(Request $request, EntityManagerInterface $manager,TrickRepository $trickRepository): Response
     {
