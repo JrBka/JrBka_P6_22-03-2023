@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[UniqueEntity('name')]
-#[ORM\HasLifecycleCallbacks]
+#[ORM\HasLifecycleCallbacks()]
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
 
 class Trick
@@ -69,7 +69,7 @@ class Trick
     /**
      * @var \DateTimeImmutable|null
      */
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
     /**
@@ -84,7 +84,6 @@ class Trick
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable;
-        $this->updatedAt = new \DateTimeImmutable;
         $this->comments = new ArrayCollection();
     }
 

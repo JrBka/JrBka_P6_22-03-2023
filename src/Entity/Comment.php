@@ -45,8 +45,9 @@ class Comment
      */
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[Assert\NotNull]
+    #[ORM\JoinColumn(name: 'trick_id',referencedColumnName: 'id',onDelete: 'CASCADE')]
     private ?Trick $trick = null;
-
+    
     /**
      * Constructor
      */
