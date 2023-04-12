@@ -4,31 +4,33 @@
 
 {% block body %}
     <section class="mb-5 mb-lg-2 pb-5 pb-lg-2">
-    <div class="border min-vh-100 ">
-    <div class="w-auto m-auto " style="height: 50vh; background: center/ cover no-repeat url({{ picture ? asset('images/'~picture) : asset('images/snowboard.jpg') }})">
-        <div class="position-relative px-4 px-lg-5 h-100 mw-100 d-flex justify-content-center align-items-center" style="background-color: black; opacity: 0.7">
-            <h1 style="font-size: 68px" >Modification d'image</h1>
-        </div>
-    </div>
-    <h2 class="text-center my-4">Changer l'image</h2>
-    <div class="px-2 px-md-5 px-xl-2 d-flex justify-content-center flex-wrap ">
-        <div class=" col-12 col-lg-1 mx-auto my-3 m-xl-4" style="width: 300px; height: 400px" >
-            <div class="h-100 text-decoration-none d-flex justify-content-center overflow-hidden"
-                 style="cursor: pointer; background: center/ cover no-repeat url({{ asset('images/'~picture) }})"></div>
-        </div>
-    </div>
-    <div class="d-flex justify-content-center my-4">
-        <div class="col-8 col-lg-6">
-            {{ form_start(form,{'action':path('app_tricks_editmedia',{'trickName':trickName,'slug':'updatePicture','mediaIndex':index})}) }}
-            <div class="form-group">
-                {{ form_label(form.images) }}
-                {{ form_widget(form.images) }}
-                <div class="form-error text-danger">
-                    {{ form_errors(form.images) }}
+        <div class="border min-vh-100 ">
+            <div class="w-auto m-auto " style="height: 50vh; background: center/ cover no-repeat url({{ picture ? asset('images/'~picture) : asset('images/snowboard.jpg') }})">
+                <div class="position-relative px-4 px-lg-5 h-100 mw-100 d-flex justify-content-center align-items-center" style="background-color: black; opacity: 0.7">
+                    <h1 style="font-size: 68px" >Modification d'image</h1>
                 </div>
             </div>
-            {{ form_row(form.submit) }}
-            {{ form_end(form) }}
+            <h2 class="text-center my-4">Changer l'image</h2>
+            <div class="px-2 px-md-5 px-xl-2 d-flex justify-content-center flex-wrap ">
+                <div class=" col-12 col-lg-1 mx-auto my-3 m-xl-4" style="width: 300px; height: 400px" >
+                    <div class="h-100 text-decoration-none d-flex justify-content-center overflow-hidden"
+                         style="cursor: pointer; background: center/ cover no-repeat url({{ asset('images/'~picture) }})"></div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center my-4">
+                <div class="col-8 col-lg-6">
+                    {{ form_start(form,{'action':path('app_tricks_editmedia',{'trickName':trickName,'slug':'updatePicture','mediaIndex':index})}) }}
+                    <div class="form-group">
+                        {{ form_label(form.images) }}
+                        {{ form_widget(form.images) }}
+                        <div class="form-error text-danger">
+                            {{ form_errors(form.images) }}
+                        </div>
+                    </div>
+                    {{ form_row(form.submit) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 {% endblock %}

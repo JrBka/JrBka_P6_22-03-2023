@@ -21,6 +21,23 @@
         <header>
            {% include "partials/_header.html.twig" %}
         </header>
+        {% block message %}
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success text-center h1 my-0">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('warning') %}
+                <div class="alert alert-warning text-center h1 my-0">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('danger') %}
+                <div class="alert alert-danger text-center h1 my-0">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endblock %}
         {% block body %}{% endblock %}
         <footer>
            {% include "partials/_footer.html.twig" %}

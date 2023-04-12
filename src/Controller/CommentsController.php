@@ -81,19 +81,15 @@ class CommentsController extends AbstractController
 
             $this->addFlash('success', 'Votre commentaire a bien été ajouté !');
 
-            return $this->redirect('/tricks/details/'.$slug.'#success');
+            return $this->redirect('/tricks/details/'.$slug);
         }else{
-            $this->addFlash('error', 'Votre commentaire n\'a pas pu être ajouté !');
+            $this->addFlash('danger', 'Votre commentaire n\'a pas pu être ajouté !');
 
-            return $this->redirect('/tricks/details/'.$slug.'#error');
+            return $this->redirect('/tricks/details/'.$slug);
         }
 
 
     }
 
-
-
-
-
-
 }
+

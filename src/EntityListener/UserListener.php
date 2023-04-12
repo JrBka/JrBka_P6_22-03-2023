@@ -4,7 +4,6 @@ namespace App\EntityListener;
 
 use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Flex\Response;
 
 class UserListener{
 
@@ -43,3 +42,4 @@ class UserListener{
     }
 
 }
+

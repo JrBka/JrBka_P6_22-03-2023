@@ -107,7 +107,7 @@ class TricksController extends AbstractController
                 }
                 $trickRepository->remove($trick,true);
                 $this->addFlash('success', 'Votre figure a bien été supprimé');
-                return $this->redirect('/#tricks');
+                return $this->redirectToRoute('app_home');
         }
 
         // Creation oh the form
@@ -146,7 +146,7 @@ class TricksController extends AbstractController
                         echo $e->getMessage();
                     }
                 }
-                    $trick->setPicture($newFilesName);
+                $trick->setPicture($newFilesName);
             }
             if ($video) {
                 $srcVideos = ($slug == 'create') ? [] : $videos;
@@ -165,7 +165,7 @@ class TricksController extends AbstractController
 
             $var = ($slug=='create') ? 'ajouté' : 'modifié';
             $this->addFlash('success', 'Votre figure a bien été '.$var);
-            return $this->redirect('/#tricks');
+            return $this->redirectToRoute('app_home');
 
         }
 
@@ -292,7 +292,7 @@ class TricksController extends AbstractController
         // Redirect to updateTrick page and show flash message
         $var = $slug == 'deletePicture' || $slug == 'deleteVideo' ? 'supprimé' : 'modifié';
         $this->addFlash('success', 'Votre image a bien été '.$var);
-        return $this->redirect('/tricks/update/'.$trickName.'#success');
+        return $this->redirect('/tricks/update/'.$trickName);
     }
 
 }

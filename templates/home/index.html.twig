@@ -19,11 +19,6 @@
     </section>
 
     <section class="py-5 mb-5 mb-lg-0" id="tricks">
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success text-center h1">
-                {{ message }}
-            </div>
-        {% endfor %}
         <div class="d-flex justify-content-center mb-4">
             <a href="{{ path('app_tricks_managetrick',{'slug':'create','name':'new'}) }}"><button type="button" class="btn btn-outline-primary">Ajouter une figure</button></a>
         </div>
