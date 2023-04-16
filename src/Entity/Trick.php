@@ -12,8 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[UniqueEntity('name')]
-#[ORM\HasLifecycleCallbacks()]
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
+#[ORM\EntityListeners(['App\EntityListener\TrickListener'])]
 
 class Trick
 {
@@ -52,13 +52,13 @@ class Trick
      * @var array|null
      */
     #[ORM\Column(nullable: true)]
-    private ?array $picture = null;
+    private ?array $pictures = null;
 
     /**
      * @var array|null
      */
     #[ORM\Column(nullable: true)]
-    private ?array $video = null;
+    private ?array $videos = null;
 
     /**
      * @var \DateTimeImmutable|null
@@ -69,7 +69,7 @@ class Trick
     /**
      * @var \DateTimeImmutable|null
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     /**
@@ -85,15 +85,6 @@ class Trick
     {
         $this->createdAt = new \DateTimeImmutable;
         $this->comments = new ArrayCollection();
-    }
-
-    /**
-     * @return \DateTimeImmutable
-     */
-    #[ORM\PrePersist]
-    public function setUpdatedAtValue(): \DateTimeImmutable
-    {
-        return $this->updatedAt = new \DateTimeImmutable;
     }
 
     public function getId(): ?int
@@ -137,26 +128,26 @@ class Trick
         return $this;
     }
 
-    public function getPicture(): ?array
+    public function getPictures(): ?array
     {
-        return $this->picture;
+        return $this->pictures;
     }
 
-    public function setPicture(?array $picture): self
+    public function setPictures(?array $pictures): self
     {
-        $this->picture = $picture;
+        $this->pictures = $pictures;
 
         return $this;
     }
 
-    public function getVideo(): ?array
+    public function getVideos(): ?array
     {
-        return $this->video;
+        return $this->videos;
     }
 
-    public function setVideo(?array $video): self
+    public function setVideos(?array $videos): self
     {
-        $this->video = $video;
+        $this->videos = $videos;
 
         return $this;
     }
@@ -208,9 +199,9 @@ class Trick
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }

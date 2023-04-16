@@ -23,6 +23,7 @@ class UserController extends AbstractController
      * @param SendMailService $mailService
      * @param JWTService $jwt
      * @return Response
+     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
      */
     #[Route('/registration', name: 'app_registration', methods: ['GET','POST'])]
     public function registration(Request $request,EntityManagerInterface $manager,SendMailService $mailService,JWTService $jwt): Response

@@ -6,7 +6,7 @@
 
     <section class="mb-5 mb-lg-2 pb-5 pb-lg-2">
         <div class="border min-vh-100 ">
-            <div class="w-auto m-auto " style="height: 50vh; background: center/ cover no-repeat url({{ trick.picture ? asset('images/'~trick.picture[0]) : asset('images/snowboard.jpg') }})">
+            <div class="w-auto m-auto " style="height: 50vh; background: center/ cover no-repeat url({{ trick.pictures ? asset('images/'~trick.pictures[0]) : asset('images/snowboard.jpg') }})">
                 <div class="position-relative px-4 px-lg-5 h-100 mw-100 d-flex justify-content-center align-items-center" style="background-color: black; opacity: 0.7">
                     <div class="position-absolute " style="top: 5%; right: 5%">
                         <button type="button" class="btn btn-primary me-2 p-0">
@@ -37,14 +37,14 @@
                     </div>
                 </div>
             </div>
-            {% if trick.picture %}
+            {% if trick.pictures %}
 
                 <h2 class="text-center my-4">{{ trick.name }} en image</h2>
                 <div class="px-2 px-md-5 px-xl-2 d-flex justify-content-start flex-wrap border">
 
                     {% set nb = 1 %}
 
-                    {% for picture in trick.picture %}
+                    {% for picture in trick.pictures %}
 
                         {% set nb = nb + 1 %}
 
@@ -70,10 +70,10 @@
                 </div>
             {% endif %}
 
-            {% if trick.video %}
+            {% if trick.videos %}
                 <h2 class="text-center my-4">{{ trick.name }} en video</h2>
                 <div class="p-lg-2 d-flex justify-content-center justify-content-md-start flex-wrap border">
-                    {% for video in trick.video %}
+                    {% for video in trick.videos %}
                         <iframe class="my-2 mx-1 mx-lg-2 col-10 col-lg-3" style="height: 300px; width: 400px; " src="{{ video }}" allowfullscreen></iframe>
                     {% endfor %}
 

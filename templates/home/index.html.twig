@@ -31,7 +31,7 @@
 
                 <div class="card mx-auto my-4 my-md-2 mx-xl-2 col-10 col-xl-2" style="height: 500px; width: 400px">
                     <a href="{{ path( 'app_tricks_getonetrick',{'slug':trick.name } ) }}" class="h-100 w-100  text-decoration-none"
-                       style=" background: center/ cover no-repeat url({{ trick.picture ? asset('images/'~trick.picture[0]) : asset('images/snowboard.jpg') }})">
+                       style=" background: center/ cover no-repeat url({{ trick.pictures ? asset('images/'~trick.pictures[0]) : asset('images/snowboard.jpg') }})">
                     </a>
                         <div class="card-footer d-flex justify-content-between bg-dark text-light">
                             <div>

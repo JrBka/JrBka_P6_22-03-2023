@@ -55,31 +55,11 @@ class RegistrationType extends AbstractType
                     ]
                 ],
                 'invalid_message' => 'les mots de passe ne correspondent pas',
-                'constraints' => new Assert\Regex(['pattern' => '/^(?=.*\d)(?=.*[A-Z])(?=.*[@#$%])(?!.*(.)\1{2}).*[a-z]/m',
+                'constraints' => new Assert\Regex(['pattern' => '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?([^\w\s]|[_])).{8,}$/',
                     'match' => true,
                     'message' => 'Votre mot de passe doit comporter au moins huit caractères, dont des lettres majuscules et minuscules, un chiffre et un symbole',
-                ])
-            ])
-            ->add('profilePhoto', FileType::class, [
-                'attr'=>[
-                    'class'=> 'form-control mb-4'
-                ],
-                'label'=>"Photo de profile aux formats ( '.png'  .'jpeg'  '.webp' )",
-                'label_attr'=>[
-                    'class'=>'form-label'
-                ],
-                'mapped' => false,
-                'required' => false,
-                'constraints' => [
-                    new File([
-                        'maxSize' => '1024k',
-                        'mimeTypes' => [
-                            'image/png',
-                            'image/jpeg',
-                            'image/webp'
-                        ]
-                    ])
-                ]
+                ]),
+                'mapped'=>false
             ])
             ->add('email',EmailType::class,[
                 'attr'=>[

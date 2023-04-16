@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Trick;
+use App\Service\RemoveImage;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 /**
  * @extends ServiceEntityRepository<Trick>
@@ -31,9 +31,12 @@ class TrickRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Trick $entity, bool $flush = false): void
+    public function remove(Trick $entity,RemoveImage $removeImage,$images,bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
+        if (!empty($images)){
+            $removeImage->removeImages($images);
+        }
 
         if ($flush) {
             $this->getEntityManager()->flush();

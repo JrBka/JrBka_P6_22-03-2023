@@ -13,17 +13,31 @@ class UserListener{
         $this->hasher = $hasher;
     }
 
+    /**
+     * This function hashes the password before it is persisted
+     *
+     * @param User $user
+     * @return void
+     */
     public function prePersist(User $user):void
     {
         $this->encodePassword($user);
     }
 
+    /**
+     * This function hashes the password before it is updated
+     *
+     * @param User $user
+     * @return void
+     */
     public function preUpdate(User $user):void
     {
         $this->encodePassword($user);
     }
 
     /**
+     * This function hashes the password
+     *
      * @param User $user
      * @return void
      */

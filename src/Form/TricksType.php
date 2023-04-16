@@ -84,7 +84,7 @@ class TricksType extends AbstractType
                     ])
                 ]
             ])
-            ->add('video',TextareaType::class,[
+            ->add('videos',TextareaType::class,[
                 'required'=>false,
                 'mapped' => false,
                 'attr'=>[

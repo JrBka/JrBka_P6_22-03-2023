@@ -5,11 +5,11 @@
 {% block body %}
     <section class="mb-5 mb-lg-2 pb-5 pb-lg-2">
         <div class="border min-vh-100 ">
-            <div class="w-auto m-auto " style="height: 50vh; background: center/ cover no-repeat url({{ trick.picture ? asset('images/'~trick.picture[0]) : asset('images/snowboard.jpg') }})">
+            <div class="w-auto m-auto " style="height: 50vh; background: center/ cover no-repeat url({{ trick.pictures ? asset('images/'~trick.pictures[0]) : asset('images/snowboard.jpg') }})">
                 <div class="position-relative px-4 px-lg-5 h-100 mw-100 d-flex justify-content-center align-items-center" style="background-color: black; opacity: 0.7">
                     <div class="position-absolute " style="top: 5%; right: 5%">
                         <button type="button" class="btn btn-primary text-light me-2 p-0">
-                            <a class="btn text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'update-picture','mediaIndex':0}) }}"><i class="fa-solid fa-pencil"></i></a>
+                            <a class="btn text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'updatePicturePage','mediaIndex':0}) }}"><i class="fa-solid fa-pencil"></i></a>
                         </button>
                         <!-- Button trigger modal delete -->
                         <button type="button" class="btn btn-danger "  data-toggle="modal" data-target="#modalDeleteImage0">
@@ -20,18 +20,18 @@
                 </div>
             </div>
             <div class="border-bottom my-4 pb-4">
-                {% if trick.picture %}
+                {% if trick.pictures %}
                     <h2 class="text-center my-4">Modifier les images</h2>
                     <div class="px-2 px-md-5 px-xl-2 d-flex justify-content-start flex-wrap">
                         {% set nb = 0 %}
-                        {% for picture in trick.picture %}
+                        {% for picture in trick.pictures %}
                             <div class="card col-12 col-lg-1 mx-auto my-3 m-xl-4" style="width: 300px; height: 400px" >
                                 <div class="h-100 text-decoration-none d-flex justify-content-center overflow-hidden" style="background: center/ cover no-repeat url({{ asset('images/'~picture) }})">
                                 </div>
                                 <div class=" card-footer bg-dark d-flex justify-content-end ">
                                     <div>
                                         <button type="button" class="btn btn-outline-primary text-light me-2 p-0">
-                                            <a class="btn text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'update-picture','mediaIndex':nb}) }}"><i class="fa-solid fa-pencil"></i></a>
+                                            <a class="btn text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'updatePicturePage','mediaIndex':nb}) }}"><i class="fa-solid fa-pencil"></i></a>
                                         </button>
                                         <!-- Button trigger modal delete -->
                                         <button type="button" class="btn btn-outline-danger text-light ms-2"  data-toggle="modal" data-target="#modalDeleteImage{{ nb }}">
@@ -76,17 +76,17 @@
                 </div>
             </div>
             <div class="border-bottom my-4 pb-4">
-                {% if trick.video %}
+                {% if trick.videos %}
                     <h2 class="text-center my-4">Modifier les vidéos</h2>
                     <div class="p-lg-2 d-flex justify-content-center justify-content-md-start flex-wrap">
                         {% set nb = 0 %}
-                        {% for video in trick.video %}
+                        {% for video in trick.videos %}
                             <div class="card col-12 col-lg-1 mx-auto my-3 m-xl-4" style="width: 300px; height: 400px" >
                                 <iframe class="my-2 mx-1 mx-lg-2 col-10 col-lg-3" style="height: 300px; width: 400px; " src="{{ video }}" allowfullscreen></iframe>
                                 <div class=" card-footer bg-dark d-flex justify-content-end ">
                                     <div>
                                         <button type="button" class="btn btn-outline-primary text-light me-2 p-0">
-                                            <a class="btn text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'update-video','mediaIndex':nb}) }}"><i class="fa-solid fa-pencil"></i></a>
+                                            <a class="btn text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'updateVideoPage','mediaIndex':nb}) }}"><i class="fa-solid fa-pencil"></i></a>
                                         </button>
                                         <!-- Button trigger modal delete -->
                                         <button type="button" class="btn btn-outline-danger text-light ms-2"  data-toggle="modal" data-target="#modalDeleteVideo{{ nb }}">
@@ -120,10 +120,10 @@
                     <h3 class="my-5" >Ajouter une vidéo</h3>
                     <div class="col-8 col-lg-6">
                         <div class="form-group">
-                            {{ form_label(form.video) }}
-                            {{ form_widget(form.video) }}
+                            {{ form_label(form.videos) }}
+                            {{ form_widget(form.videos) }}
                             <div class="form-error text-danger">
-                                {{ form_errors(form.video) }}
+                                {{ form_errors(form.videos) }}
                             </div>
                         </div>
                     </div>

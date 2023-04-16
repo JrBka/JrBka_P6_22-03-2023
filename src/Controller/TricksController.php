@@ -8,9 +8,10 @@ use App\Form\TricksType;
 use App\Form\VideoType;
 use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
+use App\Service\MoveImage;
+use App\Service\RemoveImage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -74,10 +75,12 @@ class TricksController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $manager
      * @param TrickRepository $trickRepository
+     * @param RemoveImage $removeImage
+     * @param MoveImage $moveImage
      * @return Response
      */
     #[Route('/tricks/{slug}/{name}', name: 'app_tricks_managetrick', methods: ['GET','POST'])]
-    public function manageTrick(Request $request, EntityManagerInterface $manager,TrickRepository $trickRepository): Response
+    public function manageTrick(Request $request, EntityManagerInterface $manager,TrickRepository $trickRepository,RemoveImage $removeImage,MoveImage $moveImage): Response
     {
         $slug = $request->get('slug');
         $trickName = $request->get('name');
@@ -89,23 +92,15 @@ class TricksController extends AbstractController
                 break;
             case 'update':
                 $trick = $trickRepository->findOneBy(['name' => $trickName]);
-                $images = $trick->getPicture();
-                $videos = $trick->getVideo();
+                $images = $trick->getPictures();
+                $videos = $trick->getVideos();
                 break;
             case 'delete':
                 // Delete trick
                 $trick = $trickRepository->findOneBy(['name' => $trickName]);
-                $images = $trick->getPicture();
-                if (!empty($images)){
-                    foreach ($images as $image){
-                        //Delete the images in 'images' directory
-                        $imageToBeDeleted = $this->getParameter('images_directory').'/'.$image;
-                        if (file_exists($imageToBeDeleted)){
-                            unlink($imageToBeDeleted);
-                        }
-                    }
-                }
-                $trickRepository->remove($trick,true);
+                $images = $trick->getPictures();
+                // Removes the picture in 'images' directory
+                $trickRepository->remove($trick,$removeImage,$images,true);
                 $this->addFlash('success', 'Votre figure a bien été supprimé');
                 return $this->redirectToRoute('app_home');
         }
@@ -127,36 +122,31 @@ class TricksController extends AbstractController
             $groupe = ucfirst(strtolower($groupe));
             $trick->setTricksGroup($groupe);
 
-            $picture = $form->get('images')->getData();
-            $video = $form->get('video')->getData();
+            $newPictures = $form->get('images')->getData();
+            $newVideos = $form->get('videos')->getData();
 
-            if ($picture) {
+            if ($newPictures) {
                 $newFilesName = ($slug == 'create') ? [] : $images;
-                foreach ($picture as $image) {
+                foreach ($newPictures as $image) {
                     //Define a new name
                     $newFilename = time() . uniqid() . '.' . $image->guessExtension();
                     $newFilesName [] = $newFilename;
-                    //Save the image in 'images' directory
-                    try {
-                        $image->move(
-                            $this->getParameter('images_directory'),
-                            $newFilename
-                        );
-                    } catch (FileException $e) {
-                        echo $e->getMessage();
-                    }
+                    // Saves the image in 'images' directory
+                    $moveImage->moveImages($image,$newFilename);
                 }
-                $trick->setPicture($newFilesName);
+                $trick->setPictures($newFilesName);
             }
-            if ($video) {
+            if ($newVideos) {
                 $srcVideos = ($slug == 'create') ? [] : $videos;
                 //Get content of 'src' in the tag
-                preg_match_all('/src=\"[^\"]*\"/', $video, $result);
-                foreach ($result[0] as $src){
-                    $src = explode("\"", $src);
-                    $srcVideos [] = $src[1];
+                preg_match_all('/src=\"[^\"]*\"/', $newVideos, $result);
+                if (isset($result[0])){
+                    foreach ($result[0] as $src){
+                        $src = explode("\"", $src);
+                        $srcVideos [] = $src[1];
+                    }
                 }
-                $trick->setVideo($srcVideos);
+                $trick->setVideos($srcVideos);
             }
 
             //Save $trick in database
@@ -191,10 +181,12 @@ class TricksController extends AbstractController
      * @param Request $request
      * @param TrickRepository $trickRepository
      * @param EntityManagerInterface $manager
+     * @param RemoveImage $removeImage
+     * @param MoveImage $moveImage
      * @return Response
      */
     #[Route('/tricks/{trickName}/{slug}/{mediaIndex}', name: 'app_tricks_editmedia',methods: ['GET','POST'])]
-    public function editMedia(Request $request,TrickRepository $trickRepository,EntityManagerInterface $manager): Response
+    public function editMedia(Request $request,TrickRepository $trickRepository,EntityManagerInterface $manager,RemoveImage $removeImage,MoveImage $moveImage): Response
     {
         $trickName = $request->get('trickName');
         $slug = $request->get('slug');
@@ -204,32 +196,32 @@ class TricksController extends AbstractController
         $trick = $trickRepository->findOneBy(['name' => $trickName]);
 
         // Get pictures array
-        $pictures = $trick->getPicture();
+        $pictures = $trick->getPictures();
         if (isset($pictures[$index])) {
             $image = $pictures[$index];
         }
 
         // Get videos array
-        $videos = $trick->getVideo();
+        $videos = $trick->getVideos();
         if (isset($videos[$index])){
             $video = $videos[$index];
         }
 
         // Creation of the form
-        $formType = $slug == 'update-picture' || $slug == 'updatePicture' ? PictureType::class : VideoType::class;
+        $formType = $slug == 'updatePicturePage' || $slug == 'updatePicture' ? PictureType::class : VideoType::class;
         $form = $this->createForm($formType, $trick);
         //Get the request
         $form->handleRequest($request);
 
         switch ($slug){
-            case 'update-picture':
+            case 'updatePicturePage':
                  return $this->render('tricks/updatePicture.html.twig',[
                     'form'=>$form->createView(),
                     'trickName'=>$trickName,
                     'index'=>$index,
                     'picture'=>$image
                 ]);
-            case 'update-video':
+            case 'updateVideoPage':
                 return $this->render('tricks/updateVideo.html.twig',[
                     'form'=>$form->createView(),
                     'trickName'=>$trickName,
@@ -243,6 +235,7 @@ class TricksController extends AbstractController
                 break;
             case 'deletePicture':
                 //Remove image from array 'pictures' and sort
+                $removeImage->removeImages([$image]);
                 unset($pictures[$index]);
                 sort($pictures);
                 break;
@@ -253,31 +246,27 @@ class TricksController extends AbstractController
                 // Define a new name for the image
                 $file = $form->get('images')->getData();
                 $newFilename = time() . uniqid() . '.' . $file->guessExtension();
-                //Save the image in 'images' directory
-                try {
-                    $file->move(
-                        // Call the service
-                        $this->getParameter('images_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    echo $e->getMessage();
-                }
+                // Saves the image in 'images' directory
+                $moveImage->moveImages($file,$newFilename);
+                // Removes the old image
+                $removeImage->removeImages([$image]);
                 //Replace the old picture with the new one in the 'picture' array of the trick entity
                 $pictures = array_replace($pictures, [$index => $newFilename]);
             } elseif ($slug == 'updateVideo') {
                 // Extract the src of the embed tag
                 $newVideo = $form->get('video')->getData();
                 preg_match('/src=\"[^\"]*\"/', $newVideo, $result);
-                $newVideo = explode("\"", $result[0]);
+                if (isset($result[0])){
+                    $newVideo = explode("\"", $result[0]);
+                }
                 //Replace the old picture with the new one in the 'picture' array of the trick entity
                 $videos = array_replace($videos, [$index=> $newVideo[1]]);
             }
         }
 
         // Sets new trick entity values and saves them to the database
-        $trick->setVideo($videos);
-        $trick->setPicture($pictures);
+        $trick->setVideos($videos);
+        $trick->setPictures($pictures);
         $manager->persist($trick);
         $manager->flush();
 

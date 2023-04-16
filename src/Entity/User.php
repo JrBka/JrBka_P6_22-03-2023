@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -15,48 +17,79 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\EntityListeners(['App\EntityListener\UserListener'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    /**
+     * @var int|null
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    /**
+     * @var string|null
+     */
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 180)]
     private ?string $username = null;
 
+    /**
+     * @var array
+     */
     #[ORM\Column]
     #[Assert\NotNull]
     private array $roles = [];
 
+    /**
+     * @var string|null
+     */
     private ?string $plainPassword = 'password';
 
     /**
-     * @var string The hashed password
+     * @var string|null
      */
     #[ORM\Column]
     #[Assert\NotBlank]
     private ?string $password = 'password';
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $profilePhoto = null;
+    /**
+     * @var string|null
+     */
+    #[ORM\Column(length: 255)]
+    private ?string $profilePhoto = 'user.webp';
 
+    /**
+     * @var string|null
+     */
     #[ORM\Column(length: 255)]
     #[Assert\Email]
     #[Assert\Length(max: 255)]
     private ?string $email = null;
 
+    /**
+     * @var \DateTimeImmutable|null
+     */
     #[ORM\Column]
     #[Assert\NotNull]
     private ?\DateTimeImmutable $createdAt = null;
 
+    /**
+     * @var bool
+     */
     #[ORM\Column]
     private bool $isEnable = false;
+
+    /**
+     * @var Collection|ArrayCollection
+     */
+    #[ORM\OneToMany(mappedBy: 'userId', targetEntity: Comment::class, orphanRemoval: true)]
+    private Collection $comments;
 
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -184,6 +217,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsEnable(bool $isEnable): self
     {
         $this->isEnable = $isEnable;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment, User $user): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getUserId() === $this) {
+                $comment->setUserId($user);
+            }
+        }
 
         return $this;
     }

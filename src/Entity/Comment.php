@@ -21,13 +21,6 @@ class Comment
     private ?int $id = null;
 
     /**
-     * @var int|null
-     */
-    #[ORM\Column]
-    #[Assert\NotNull]
-    private ?int $userId = null;
-
-    /**
      * @var string|null
      */
     #[ORM\Column(type: Types::TEXT)]
@@ -47,7 +40,15 @@ class Comment
     #[Assert\NotNull]
     #[ORM\JoinColumn(name: 'trick_id',referencedColumnName: 'id',onDelete: 'CASCADE')]
     private ?Trick $trick = null;
-    
+
+    /**
+     * @var User|null
+     */
+    #[ORM\ManyToOne(inversedBy: 'comments')]
+    #[Assert\NotNull]
+    #[ORM\JoinColumn]
+    private ?User $userId = null;
+
     /**
      * Constructor
      */
@@ -62,12 +63,12 @@ class Comment
         return $this->id;
     }
 
-    public function getUserId(): ?int
+    public function getUserId(): User
     {
         return $this->userId;
     }
 
-    public function setUserId(int $userId): self
+    public function setUserId(User $userId): self
     {
         $this->userId = $userId;
 

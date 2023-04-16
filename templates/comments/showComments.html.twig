@@ -5,8 +5,8 @@
         {% for comment in comments.data %}
             <div class="card border-primary mb-3 w-100 " style="height: max-content">
                 <div class="card-header d-flex justify-content-between">
-                    <span>{{ comment.userId }}</span>
-                    <span>{{ comment.userId }}</span>
+                    <span>{{ comment.content }}</span>
+                    <span>{{ comment.content }}</span>
                     <span>{{ comment.createdAt|date('d-m-Y') }}</span>
                 </div>
                 <div class="card-body">

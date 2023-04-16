@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Trick;
+use App\Entity\User;
 use App\Form\CommentsType;
 use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormView;
@@ -28,8 +30,7 @@ class CommentsController extends AbstractController
     public function getComments(CommentRepository $commentRepository, int $page, string $slug,int $trick):array
     {
         //Comments pagination
-        $comments = $commentRepository->findCommentsPaginated($page,10,$slug,$trick);
-        return $comments;
+        return $commentRepository->findCommentsPaginated($page,10,$slug,$trick);
     }
 
     /**
@@ -56,7 +57,7 @@ class CommentsController extends AbstractController
      * @return Response
      */
     #[Route('/comment/create',name: 'app_comments_createcomment',methods: ['POST','GET'])]
-    public function createComment(Request $request, EntityManagerInterface $manager,TrickRepository $trickRepository): Response
+    public function createComment(Request $request, EntityManagerInterface $manager,TrickRepository $trickRepository,UserRepository $userRepository): Response
     {
 
         $comment = new Comment();
@@ -69,7 +70,8 @@ class CommentsController extends AbstractController
 
         //get userid courant
         $userId = $request->query->get('userId');
-        $comment->setUserId($userId);
+        $user = $userRepository->find($userId);
+        $comment->setUserId($user);
 
         $slug = $request->query->get('trick');
         $trick= $trickRepository->findOneBy(['name'=>$slug]);
