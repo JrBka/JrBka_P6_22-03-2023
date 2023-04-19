@@ -135,7 +135,7 @@ class UserController extends AbstractController
     /**
      *  This function verify the token
      *
-     * @param $token
+     * @param string $token
      * @param JWTService $jwt
      * @param UserRepository $userRepository
      * @param EntityManagerInterface $manager
@@ -143,7 +143,7 @@ class UserController extends AbstractController
      * @return Response
      */
     #[Route('/check/{slug}/{token}', name: 'check_token',methods: ['GET','POST'])]
-    public function verifyToken($token, JWTService $jwt, UserRepository $userRepository, EntityManagerInterface $manager, Request $request): Response
+    public function verifyToken(string $token, JWTService $jwt, UserRepository $userRepository, EntityManagerInterface $manager, Request $request): Response
     {
         // Checking the token validity
         if (!$jwt->isValid($token) || $jwt->isExpired($token) || !$jwt->check($token, $this->getParameter('jwt_secret'))) {
@@ -194,16 +194,16 @@ class UserController extends AbstractController
     /**
      * This function modify the password
      *
-     * @param $username_token
-     * @param $username_form
-     * @param $password
-     * @param $token
+     * @param string $username_token
+     * @param string $username_form
+     * @param string $password
+     * @param string $token
      * @param UserRepository $userRepository
      * @param EntityManagerInterface $manager
      * @return Response
      */
     #[Route('/reset_password/{username_token}/{username_form}/{password}/{token}',name: 'app_reset_password',methods: ['GET','POST'])]
-    public function resetPassword($username_token,$username_form,$password,$token,UserRepository $userRepository,EntityManagerInterface $manager):Response
+    public function resetPassword(string $username_token, string $username_form, string $password, string $token,UserRepository $userRepository,EntityManagerInterface $manager):Response
     {
         $passwordIsValid = preg_match('/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?([^\w\s]|_)).{8,}$/',$password);
         if ($username_token != $username_form){

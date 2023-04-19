@@ -33,7 +33,7 @@ class TrickRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Trick $entity,RemoveImage $removeImage,$images,bool $flush = false): void
+    public function remove(Trick $entity,RemoveImage $removeImage,array $images,bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
         if (!empty($images)){
