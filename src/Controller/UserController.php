@@ -98,45 +98,37 @@ class UserController extends AbstractController
         $subject = ($slug == 'activation' ? 'Activation de votre compte sur le site snowtricks' : 'Modification de mot de passe sur le site snowtricks');
         $message = ($slug == 'activation' ? 'Le lien d\'activation à été envoyé avec succès !' : 'Le lien pour accéder à la modification du mot passe à été envoyé avec succès !');
 
-        if (isset($user)){
-            if (!$user->getIsEnable() || $slug == 'password'){
-                // Generation of the jwt
-                // Creation of the header
-                $header = [
-                    'typ' => 'JWT',
-                    'alg' => 'HS256'
-                ];
-
-                // Creation of the payload
-                $payload = [
-                    'user_id' => $user->getId()
-                ];
-
-                // Generation of the token
-                $token = $jwt->generate($header, $payload, $this->getParameter('jwt_secret'));
-
-                // Sends the email
-                $mailService->send(
-                    'no-reply@snowtricks.fr',
-                    $user->getEmail(),
-                    $subject,
-                    $template,
-                    ['user'=>$user,'token'=>$token]
-
-                );
-
-                $this->addFlash('success', $message);
-                return $this->redirectToRoute('app_home');
-            }
-            else{
-                $this->addFlash('warning','Votre compte est déjà activé !');
-                return $this->redirectToRoute('app_login');
-            }
-        }else{
-            $this->addFlash('warning','L\'utilisateur n\'existe pas');
+        if (!isset($user)) {
+            $this->addFlash('danger', 'L\'utilisateur n\'existe pas');
+            return $this->redirectToRoute('app_login');
+        }elseif ($slug == 'activation' && $user->getIsEnable()){
+            $this->addFlash('warning','Votre compte est déjà activé !');
+            return $this->redirectToRoute('app_login');
+        }elseif ($slug != 'password' && $slug != 'activation'){
+            $this->addFlash('warning','Cette route n\'existe pas !');
             return $this->redirectToRoute('app_login');
         }
-
+        // Generation of the jwt
+        // Creation of the header
+        $header = [
+            'typ' => 'JWT',
+            'alg' => 'HS256'
+        ];
+        // Creation of the payload
+        $payload = [
+            'user_id' => $user->getId()
+        ];
+        // Generation of the token
+        $token = $jwt->generate($header, $payload, $this->getParameter('jwt_secret'));
+        // Sends the email
+        $mailService->send(
+            'no-reply@snowtricks.fr',
+            $user->getEmail(),
+            $subject,
+            $template,
+            ['user'=>$user,'token'=>$token]);
+        $this->addFlash('success', $message);
+        return $this->redirectToRoute('app_home');
     }
 
 
@@ -154,51 +146,78 @@ class UserController extends AbstractController
     public function verifyToken($token, JWTService $jwt, UserRepository $userRepository, EntityManagerInterface $manager, Request $request): Response
     {
         // Checking the token validity
-        if($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check($token, $this->getParameter('jwt_secret'))){
-            // Get Slug
-            $slug = $request->get('slug');
-            // Get payload
-            $payload = $jwt->getPayload($token);
+        if (!$jwt->isValid($token) || $jwt->isExpired($token) || !$jwt->check($token, $this->getParameter('jwt_secret'))) {
+            $this->addFlash('danger', 'Le token est invalide ou a expiré');
+            return $this->redirectToRoute('app_home');
+        }
 
-            // Get user with the user_id of payload
-            $user = $userRepository->find($payload['user_id']);
+        // Get Slug
+        $slug = $request->get('slug');
 
-            // Checks if user exists and if his account isn't enabled
-            if($slug == 'activation' && isset($user) && !$user->getIsEnable()){
+        // Get payload
+        $payload = $jwt->getPayload($token);
+
+        // Get user with the user_id of payload
+        $user = $userRepository->find($payload['user_id']);
+
+        if (!isset($user)){
+            $this->addFlash('danger', 'L\'utilisateur n\'existe pas !');
+            return $this->redirectToRoute('app_home');
+        }
+
+        switch ($slug){
+            case 'activation':
                 $user->setIsEnable(true);
                 $manager->persist($user);
                 $manager->flush();
                 $this->addFlash('success', 'Votre compte est maintenant activé !');
                 return $this->redirectToRoute('app_home');
-            }elseif ($slug == 'password' && isset($user)){
-                return $this->render('user/resetPassword.html.twig',['token'=>$token]);
-            }elseif ($slug == 'newPassword' && isset($user)) {
+            case 'password':
+                return $this->render('user/resetPassword.html.twig', ['token' => $token]);
+            case 'newPassword':
                 $username = $request->get('_username');
                 $password = $request->get('_password');
-                return $this->redirectToRoute('app_reset_password',[
-                    'username_token'=>$user->getUsername(),
-                    'username_form'=>$username,
-                    'password'=>$password
-                    ]);
-            }
+                return $this->redirectToRoute('app_reset_password', [
+                    'username_token' => $user->getUsername(),
+                    'username_form' => $username,
+                    'password' => $password,
+                    'token'=> $token
+                ]);
+            default:
+                $this->addFlash('danger', 'Cette route n\'existe pas !');
+                return $this->redirectToRoute('app_home');
         }
-        $this->addFlash('danger', 'Le token est invalide ou a expiré');
-        return $this->redirectToRoute('app_home');
     }
 
 
-    #[Route('/reset_password/{username_token}/{username_form}/{password}',name: 'app_reset_password',methods: ['GET','POST'])]
-    public function resetPassword($username_token,$username_form,$password,UserRepository $userRepository,EntityManagerInterface $manager):Response
+
+    /**
+     * This function modify the password
+     *
+     * @param $username_token
+     * @param $username_form
+     * @param $password
+     * @param $token
+     * @param UserRepository $userRepository
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
+    #[Route('/reset_password/{username_token}/{username_form}/{password}/{token}',name: 'app_reset_password',methods: ['GET','POST'])]
+    public function resetPassword($username_token,$username_form,$password,$token,UserRepository $userRepository,EntityManagerInterface $manager):Response
     {
-        if ($username_token === $username_form){
+        $passwordIsValid = preg_match('/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?([^\w\s]|_)).{8,}$/',$password);
+        if ($username_token != $username_form){
+            $this->addFlash('danger', 'Le nom d\'utilisateur est invalide');
+        }elseif (!$passwordIsValid) {
+            $this->addFlash('danger', 'Votre mot de passe doit comporter au moins huit caractères, dont des lettres majuscules et minuscules, un chiffre et un symbole');
+            return $this->render('user/resetPassword.html.twig', ['token' => $token]);
+        }else{
             $user = $userRepository->findOneBy(['username'=>$username_token]);
             $user->setPlainPassword($password);
-            $user->setPassword('');
+            $user->setUpdatedAt(new \DateTimeImmutable());
             $manager->persist($user);
             $manager->flush();
             $this->addFlash('success', 'Votre mot de passe a été modifié avec succès');
-        }else{
-            $this->addFlash('danger', 'Le nom d\'utilisateur est invalide');
         }
         return $this->redirectToRoute('app_home');
     }
@@ -208,11 +227,10 @@ class UserController extends AbstractController
      * This function connect an user
      *
      * @param AuthenticationUtils $authenticationUtils
-     * @param Request $request
      * @return Response
      */
     #[Route('/login',name: 'app_login',methods: ['GET','POST'])]
-    public function login(AuthenticationUtils $authenticationUtils,Request $request):Response
+    public function login(AuthenticationUtils $authenticationUtils):Response
     {
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();

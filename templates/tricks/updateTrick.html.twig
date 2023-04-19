@@ -23,7 +23,7 @@
                 {% if trick.pictures %}
                     <h2 class="text-center my-4">Modifier les images</h2>
                     <div class="px-2 px-md-5 px-xl-2 d-flex justify-content-start flex-wrap">
-                        {% set nb = 0 %}
+
                         {% for picture in trick.pictures %}
                             <div class="card col-12 col-lg-1 mx-auto my-3 m-xl-4" style="width: 300px; height: 400px" >
                                 <div class="h-100 text-decoration-none d-flex justify-content-center overflow-hidden" style="background: center/ cover no-repeat url({{ asset('images/'~picture) }})">
@@ -31,16 +31,16 @@
                                 <div class=" card-footer bg-dark d-flex justify-content-end ">
                                     <div>
                                         <button type="button" class="btn btn-outline-primary text-light me-2 p-0">
-                                            <a class="btn text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'updatePicturePage','mediaIndex':nb}) }}"><i class="fa-solid fa-pencil"></i></a>
+                                            <a class="btn text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'updatePicturePage','mediaIndex':loop.index0}) }}"><i class="fa-solid fa-pencil"></i></a>
                                         </button>
                                         <!-- Button trigger modal delete -->
-                                        <button type="button" class="btn btn-outline-danger text-light ms-2"  data-toggle="modal" data-target="#modalDeleteImage{{ nb }}">
+                                        <button type="button" class="btn btn-outline-danger text-light ms-2"  data-toggle="modal" data-target="#modalDeleteImage{{ loop.index0 }}">
                                             <i class="fa-solid fa-trash-can"></i>
                                         </button>
                                     </div>
                                 </div>
                                 <!-- Delete modal -->
-                                <div  class="modal fade text-dark" id="modalDeleteImage{{ nb ? nb : 0}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div  class="modal fade text-dark" id="modalDeleteImage{{ loop.index0 ? loop.index0 : 0}}" tabindex="-1" role="dialog" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -51,13 +51,12 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
-                                                <a class="ms-2 text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'deletePicture','mediaIndex':nb}) }}"><button type="button" class="btn btn-danger">Supprimer</button></a>
+                                                <a class="ms-2 text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'deletePicture','mediaIndex':loop.index0}) }}"><button type="button" class="btn btn-danger">Supprimer</button></a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            {% set nb = nb + 1 %}
                         {% endfor %}
                     </div>
                 {% endif %}
@@ -79,23 +78,22 @@
                 {% if trick.videos %}
                     <h2 class="text-center my-4">Modifier les vidéos</h2>
                     <div class="p-lg-2 d-flex justify-content-center justify-content-md-start flex-wrap">
-                        {% set nb = 0 %}
                         {% for video in trick.videos %}
                             <div class="card col-12 col-lg-1 mx-auto my-3 m-xl-4" style="width: 300px; height: 400px" >
                                 <iframe class="my-2 mx-1 mx-lg-2 col-10 col-lg-3" style="height: 300px; width: 400px; " src="{{ video }}" allowfullscreen></iframe>
                                 <div class=" card-footer bg-dark d-flex justify-content-end ">
                                     <div>
                                         <button type="button" class="btn btn-outline-primary text-light me-2 p-0">
-                                            <a class="btn text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'updateVideoPage','mediaIndex':nb}) }}"><i class="fa-solid fa-pencil"></i></a>
+                                            <a class="btn text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'updateVideoPage','mediaIndex':loop.index0}) }}"><i class="fa-solid fa-pencil"></i></a>
                                         </button>
                                         <!-- Button trigger modal delete -->
-                                        <button type="button" class="btn btn-outline-danger text-light ms-2"  data-toggle="modal" data-target="#modalDeleteVideo{{ nb }}">
+                                        <button type="button" class="btn btn-outline-danger text-light ms-2"  data-toggle="modal" data-target="#modalDeleteVideo{{ loop.index0 }}">
                                             <i class="fa-solid fa-trash-can"></i>
                                         </button>
                                     </div>
                                 </div>
                                 <!-- Delete modal -->
-                                <div  class="modal fade text-dark" id="modalDeleteVideo{{ nb }}" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div  class="modal fade text-dark" id="modalDeleteVideo{{ loop.index0 }}" tabindex="-1" role="dialog" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -106,13 +104,12 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
-                                                <a class="ms-2 text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'deleteVideo','mediaIndex':nb}) }}"><button type="button" class="btn btn-danger">Supprimer</button></a>
+                                                <a class="ms-2 text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'deleteVideo','mediaIndex':loop.index0}) }}"><button type="button" class="btn btn-danger">Supprimer</button></a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            {% set nb = nb + 1 %}
                         {% endfor %}
                     </div>
                 {% endif %}

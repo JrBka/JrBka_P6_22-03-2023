@@ -228,8 +228,9 @@ class TricksController extends AbstractController
             }
 
             // Creation of the form
-            $formType = $slug == 'updatePicturePage' || $slug == 'updatePicture' ? PictureType::class : VideoType::class;
+            $formType = ($slug == 'updatePicturePage' || $slug == 'updatePicture' ? PictureType::class : VideoType::class);
             $form = $this->createForm($formType, $trick);
+
             //Get the request
             $form->handleRequest($request);
 

@@ -10,16 +10,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     /**
-     * This function show the home page
-     *
      * @param TrickRepository $trickRepository
      * @return Response
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     #[Route('/', name: 'app_home', methods: ['GET'])]
     public function index(TrickRepository $trickRepository): Response
     {
-        $nbTricks = sizeof($trickRepository->findAll());
-        //Tricks pagination
+        // Numbers of tricks
+        $nbTricks = $trickRepository->countTricks();
+        // Tricks pagination
         $tricks = $trickRepository->findTricksPaginated(15);
 
         return $this->render('home/index.html.twig', [

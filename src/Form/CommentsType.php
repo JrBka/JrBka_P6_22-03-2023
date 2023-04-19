@@ -25,6 +25,7 @@ class CommentsType extends AbstractType
                 'label_attr'=>[
                     'class'=>'form-label'
                 ],
+                'required' => true,
                 'constraints'=>[
                     new Assert\NotBlank()
                 ]

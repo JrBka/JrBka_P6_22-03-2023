@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Trick;
 use App\Service\RemoveImage;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -41,6 +43,23 @@ class TrickRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+
+    /**
+     * This function count all tricks
+     *
+     * @return float|int|mixed|string
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function countTricks():mixed
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('count(tricks)')
+            ->from('App:Trick','tricks')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**

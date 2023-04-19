@@ -29,6 +29,7 @@ class RegistrationType extends AbstractType
                 'label_attr'=>[
                     'class'=>'form-label'
                 ],
+                'required' => true,
                 'constraints'=>[
                     new Assert\Length(['max'=>180]),
                     new Assert\NotBlank()
@@ -54,6 +55,7 @@ class RegistrationType extends AbstractType
                         'class'=>'form-label'
                     ]
                 ],
+                'required' => true,
                 'invalid_message' => 'les mots de passe ne correspondent pas',
                 'constraints' => new Assert\Regex(['pattern' => '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?([^\w\s]|[_])).{8,}$/',
                     'match' => true,
@@ -70,6 +72,7 @@ class RegistrationType extends AbstractType
                 'label_attr'=>[
                     'class'=>'form-label'
                 ],
+                'required' => true,
                 'constraints'=>[
                     new Assert\Email(),
                     new Assert\Length(['max'=>255]),

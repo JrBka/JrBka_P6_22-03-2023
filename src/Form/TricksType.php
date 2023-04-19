@@ -27,6 +27,7 @@ class TricksType extends AbstractType
                 'label_attr'=>[
                     'class'=>'form-label'
                 ],
+                'required' => true,
                 'constraints'=>[
                     new Assert\Length(['max'=>100]),
                     new Assert\NotBlank()
@@ -41,6 +42,7 @@ class TricksType extends AbstractType
                 'label_attr'=>[
                     'class'=>'form-label'
                 ],
+                'required' => true,
                 'constraints'=>[
                     new Assert\NotBlank()
                 ]
@@ -53,6 +55,7 @@ class TricksType extends AbstractType
                 'label_attr'=>[
                     'class'=>'form-label'
                 ],
+                'required' => true,
                 'constraints'=>[
                     new Assert\Length(['max'=>50]),
                     new Assert\NotBlank()
