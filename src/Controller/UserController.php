@@ -61,6 +61,7 @@ class UserController extends AbstractController
                 'no-reply@snowtricks.fr',
                 $user->getEmail(),
                 'Activation de votre compte sur le site snowtricks',
+                'email/emailActivation.html.twig',
                 ['user'=>$user,'token'=>$token]
 
             );
@@ -78,7 +79,7 @@ class UserController extends AbstractController
 
 
     /**
-     * This function resend an activation link
+     * This function resend an activation link or a modification password link
      *
      * @param JWTService $jwt
      * @param SendMailService $mailService
@@ -87,14 +88,18 @@ class UserController extends AbstractController
      * @return Response
      * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
      */
-    #[Route('/resend_link', name: 'app_resend_link', methods: ['GET','POST'])]
-    public function resendActivationLink(JWTService $jwt, SendMailService $mailService, UserRepository $userRepository,Request $request):Response
+    #[Route('/resend_link/{slug}', name: 'app_resend_link', methods: ['GET','POST'])]
+    public function sendLink(JWTService $jwt, SendMailService $mailService, UserRepository $userRepository,Request $request):Response
     {
+        $slug = $request->get('slug');
         $username = $request->get('user_name');
         $user = $userRepository->findOneBy(['username'=>$username]);
+        $template = ($slug == 'activation' ? 'email/emailActivation.html.twig' : 'email/emailResetPassword.html.twig');
+        $subject = ($slug == 'activation' ? 'Activation de votre compte sur le site snowtricks' : 'Modification de mot de passe sur le site snowtricks');
+        $message = ($slug == 'activation' ? 'Le lien d\'activation à été envoyé avec succès !' : 'Le lien pour accéder à la modification du mot passe à été envoyé avec succès !');
 
         if (isset($user)){
-            if (!$user->getIsEnable()){
+            if (!$user->getIsEnable() || $slug == 'password'){
                 // Generation of the jwt
                 // Creation of the header
                 $header = [
@@ -114,15 +119,16 @@ class UserController extends AbstractController
                 $mailService->send(
                     'no-reply@snowtricks.fr',
                     $user->getEmail(),
-                    'Activation de votre compte sur le site snowtricks',
+                    $subject,
+                    $template,
                     ['user'=>$user,'token'=>$token]
 
                 );
 
-                $this->addFlash('success', 'Le lien d\'activation à été envoyé avec succès !');
-
+                $this->addFlash('success', $message);
                 return $this->redirectToRoute('app_home');
-            }else{
+            }
+            else{
                 $this->addFlash('warning','Votre compte est déjà activé !');
                 return $this->redirectToRoute('app_login');
             }
@@ -143,11 +149,13 @@ class UserController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    #[Route('/check/{token}', name: 'check_token',methods: ['GET','POST'])]
-    public function verifyToken($token, JWTService $jwt, UserRepository $usersRepository, EntityManagerInterface $manager): Response
+    #[Route('/check/{slug}/{token}', name: 'check_token',methods: ['GET','POST'])]
+    public function verifyToken($token, JWTService $jwt, UserRepository $usersRepository, EntityManagerInterface $manager, Request $request): Response
     {
         // Checking the token validity
         if($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check($token, $this->getParameter('jwt_secret'))){
+            // Get Slug
+            $slug = $request->get('slug');
             // Get payload
             $payload = $jwt->getPayload($token);
 
@@ -155,12 +163,15 @@ class UserController extends AbstractController
             $user = $usersRepository->find($payload['user_id']);
 
             // Checks if user exists and if his account isn't enabled
-            if($user && !$user->getIsEnable()){
+            if($slug == 'activation' && isset($user) && !$user->getIsEnable()){
                 $user->setIsEnable(true);
                 $manager->persist($user);
                 $manager->flush();
                 $this->addFlash('success', 'Votre compte est maintenant activé !');
                 return $this->redirectToRoute('app_home');
+            }elseif ($slug == 'password' && isset($user)){
+                $this->addFlash('success', 'password modification page');
+                return $this->redirectToRoute('app_registration');
             }
         }
         $this->addFlash('danger', 'Le token est invalide ou a expiré');

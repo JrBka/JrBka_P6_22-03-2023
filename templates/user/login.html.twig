@@ -9,7 +9,7 @@
             {% if error %}
                 <div class="text-danger mb-5">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
             {% endif %}
-            <form action="{{ path('app_login') }}" method="post">
+            <form action="{{ path('app_login') }}" method="post" class="mb-4">
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 <div class="form-group">
                     <label for="username">Nom d'utilisateur</label>
@@ -21,8 +21,12 @@
                 </div>
                 <button type="submit" class="btn btn-primary mt-4">Se connecter</button>
             </form>
-            <a href="" class="mt-4 mx-auto" data-toggle="modal" data-target="#modal">Me renvoyer un lien d'activation.</a>
-            <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="ModalCenter" aria-hidden="true">
+            <div class="d-flex flex-column">
+                <a href="" class="mt-4 mx-auto" data-toggle="modal" data-target="#modal1">Me renvoyer un lien d'activation</a>
+                <a href="" class="mt-4 mx-auto" data-toggle="modal" data-target="#modal2">Mot de passe oublié ?</a>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="ModalCenter" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -32,7 +36,32 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="{{ path('app_resend_link') }}" method="post">
+                            <form action="{{ path('app_resend_link',{'slug':'activation'}) }}" method="post">
+                                <div class="form-group">
+                                    <label class="col-form-label" for="user_name">Entrez votre nom d'utilisateur</label>
+                                    <input type="text" class="form-control" id="user_name" name="user_name" required>
+                                </div>
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button type="submit" class="btn btn-primary m-2">Envoyer</button>
+                                    <button type="button" class="btn btn-secondary m-2" data-dismiss="modal">Fermer</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="ModalCenter" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Renvoi du lien d'activation</h5>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ path('app_resend_link',{'slug':'password'}) }}" method="post">
                                 <div class="form-group">
                                     <label class="col-form-label" for="user_name">Entrez votre nom d'utilisateur</label>
                                     <input type="text" class="form-control" id="user_name" name="user_name" required>
