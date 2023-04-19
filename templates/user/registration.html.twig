@@ -8,6 +8,7 @@
             <h1 class="mb-5 text-center" style="font-size: 68px" >Inscription</h1>
 
             {{ form_start(form) }}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
             <div class="form-group">
                 {{ form_label(form.username) }}

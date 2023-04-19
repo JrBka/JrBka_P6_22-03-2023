@@ -9,13 +9,15 @@
             <div class="w-auto m-auto " style="height: 50vh; background: center/ cover no-repeat url({{ trick.pictures ? asset('images/'~trick.pictures[0]) : asset('images/snowboard.jpg') }})">
                 <div class="position-relative px-4 px-lg-5 h-100 mw-100 d-flex justify-content-center align-items-center" style="background-color: black; opacity: 0.7">
                     <div class="position-absolute " style="top: 5%; right: 5%">
-                        <button type="button" class="btn btn-primary me-2 p-0">
-                            <a class=" btn text-light"  href="{{ path('app_tricks_managetrick',{'slug':'update','name':trick.name }) }}"><i class="fa-solid fa-pencil"></i></a>
-                        </button>
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-danger "  data-toggle="modal" data-target="#modalDelete">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
+                        {% if app.user and app.user == trick.getUser() %}
+                            <button type="button" class="btn btn-primary me-2 p-0">
+                                <a class=" btn text-light"  href="{{ path('app_tricks_managetrick',{'slug':'update','name':trick.name }) }}"><i class="fa-solid fa-pencil"></i></a>
+                            </button>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-danger "  data-toggle="modal" data-target="#modalDelete">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        {% endif %}
                     </div>
                     <h1 style="font-size: 68px" >{{ trick.name }}</h1>
                 </div>
@@ -53,19 +55,19 @@
                                style="cursor: pointer; background: center/ cover no-repeat url({{ asset('images/'~picture) }})" data-toggle="modal" data-target="#carousel{{ nb }}"></a>
                         </div>
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="carousel{{ nb }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header d-flex justify-content-end">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="carousel{{ nb }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header d-flex justify-content-end">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <img class="w-100 h-100" src="{{ asset('images/'~picture)  }}" alt="snowboard-trick">
                                 </div>
-                                <img class="w-100 h-100" src="{{ asset('images/'~picture)  }}" alt="snowboard-trick">
                             </div>
                         </div>
-                    </div>
                     {% endfor %}
                 </div>
             {% endif %}
@@ -86,24 +88,17 @@
                 <div>
                     <p>Cette figure appartient au groupe des : <strong>{{ trick.tricksGroup }}</strong></p>
                     <p>Publiée le <strong>{{ trick.createdAt|date('d/m/Y') }}</strong></p>
+                    {% if trick.updatedAt != null %}
+                        <p>Dernière mise à jour le <strong>{{ trick.updatedAt|date('d/m/Y') }}</strong></p>
+                    {% endif %}
                 </div>
             </div>
 
-            {% for message in app.flashes('success') %}
-                <div id="success" class="alert alert-success text-center h1">
-                    {{ message }}
+            {% if app.user %}
+                <div>
+                    {% include 'comments/formComment.html.twig' %}
                 </div>
-            {% endfor %}
-            {% for message in app.flashes('error') %}
-                <div id="error" class="alert alert-danger text-center h1">
-                    {{ message }}
-                </div>
-            {% endfor %}
-
-
-            <div>
-                {% include 'comments/formComment.html.twig' %}
-            </div>
+            {% endif %}
 
             <div id="comments">
                 {% include 'comments/showComments.html.twig' %}

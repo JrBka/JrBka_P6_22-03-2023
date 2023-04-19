@@ -1,18 +1,20 @@
 {% if comments %}
 
     <h2 class="text-center my-4">Commentaires</h2>
-    <div class="p-3 mx-auto w-50 d-flex justify-content-center flex-wrap border overflow-auto" style="height: 75vh">
+    <div class="p-3 mx-auto w-50 d-flex justify-content-center flex-wrap overflow-auto border " style="height: 75vh;">
         {% for comment in comments.data %}
-            <div class="card border-primary mb-3 w-100 " style="height: max-content">
-                <div class="card-header d-flex justify-content-between">
-                    <span>{{ comment.content }}</span>
-                    <span>{{ comment.content }}</span>
-                    <span>{{ comment.createdAt|date('d-m-Y') }}</span>
+                <div class="card d-flex flex-row w-100 mb-3">
+                    <img src="{{ asset('images/'~comment.userId.profilePhoto) }}" alt="photo user default" class="border border-primary my-auto mx-3" style=" max-width: 100px;border-radius: 100px">
+                    <div class="card border-primary w-100" >
+                        <div class="card-header d-flex justify-content-between">
+                            <span>{{ comment.userId.username }}</span>
+                            <span>{{ comment.createdAt|date('d-m-Y') }}</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ comment.content }}</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p class="card-text">{{ comment.content }}</p>
-                </div>
-            </div>
         {% endfor %}
     </div>
 

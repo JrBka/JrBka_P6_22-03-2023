@@ -71,7 +71,7 @@ class CommentRepository extends ServiceEntityRepository
             return $result;
         }
 
-        // round the number of pages to up
+        // round the numbers of pages to up
         $pages = ceil($paginator->count() / $limit);
 
         $result['data'] = $data;

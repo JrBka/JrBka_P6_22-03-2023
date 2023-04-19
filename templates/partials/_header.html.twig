@@ -10,12 +10,19 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_tricks') }}#tricks"><font style="vertical-align: inherit;">Tricks</font></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_registration') }}"><font style="vertical-align: inherit;">S'inscrire</font></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href=""><font style="vertical-align: inherit;">Se connecter</font></a>
-                    </li>
+                    {% if not app.user %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_registration') }}"><font style="vertical-align: inherit;">S'inscrire</font></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_login') }}"><font style="vertical-align: inherit;">Se connecter</font></a>
+                        </li>
+                    {% endif %}
+                    {% if app.user %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_logout') }}"><font style="vertical-align: inherit;">Se déconnecter</font></a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -31,12 +38,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_tricks') }}"><i class="fa-solid fa-bookmark fa-xl fa-md-2xl"></i></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href=""><i class="fa-solid fa-right-to-bracket fa-xl fa-md-2xl"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href=""><i class="fa-solid fa-right-from-bracket fa-xl fa-md-2xl"></i></a>
-                    </li>
+                    {% if not app.user %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_login') }}"><i class="fa-solid fa-right-to-bracket fa-xl fa-md-2xl"></i></a>
+                        </li>
+                    {% endif %}
+                    {% if app.user %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_logout') }}"><i class="fa-solid fa-right-from-bracket fa-xl fa-md-2xl"></i></a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

@@ -3,18 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
-use App\Entity\Trick;
-use App\Entity\User;
 use App\Form\CommentsType;
 use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class CommentsController extends AbstractController
 {
@@ -56,8 +54,9 @@ class CommentsController extends AbstractController
      * @param TrickRepository $trickRepository
      * @return Response
      */
+    #[isGranted('ROLE_USER')]
     #[Route('/comment/create',name: 'app_comments_createcomment',methods: ['POST','GET'])]
-    public function createComment(Request $request, EntityManagerInterface $manager,TrickRepository $trickRepository,UserRepository $userRepository): Response
+    public function createComment(Request $request, EntityManagerInterface $manager,TrickRepository $trickRepository): Response
     {
 
         $comment = new Comment();
@@ -68,28 +67,23 @@ class CommentsController extends AbstractController
 
         $comment = $form->getData();
 
-        //get userid courant
-        $userId = $request->query->get('userId');
-        $user = $userRepository->find($userId);
+        $user = $this->getUser();
         $comment->setUserId($user);
 
         $slug = $request->query->get('trick');
         $trick= $trickRepository->findOneBy(['name'=>$slug]);
         $comment->setTrick($trick);
 
-        if (!empty($userId) && !empty($trick)){
+        if (!empty($trick)){
             $manager->persist($comment);
             $manager->flush();
 
             $this->addFlash('success', 'Votre commentaire a bien été ajouté !');
 
-            return $this->redirect('/tricks/details/'.$slug);
         }else{
             $this->addFlash('danger', 'Votre commentaire n\'a pas pu être ajouté !');
-
-            return $this->redirect('/tricks/details/'.$slug);
         }
-
+            return $this->redirect('/tricks/details/'.$slug);
 
     }
 

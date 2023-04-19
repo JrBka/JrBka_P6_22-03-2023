@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserController extends AbstractController
 {
@@ -30,10 +31,12 @@ class UserController extends AbstractController
     {
         $user = new User();
         $user->setRoles(['ROLE_USER']);
+        $user->setProfilePhoto('user.webp');
         $form = $this->createForm(RegistrationType::class,$user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
+            $user->setPlainPassword($form->get('plainPassword')->getData());
             $user = $form->getData();
             $manager->persist($user);
             $manager->flush();
@@ -75,6 +78,63 @@ class UserController extends AbstractController
 
 
     /**
+     * This function resend an activation link
+     *
+     * @param JWTService $jwt
+     * @param SendMailService $mailService
+     * @param UserRepository $userRepository
+     * @param Request $request
+     * @return Response
+     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
+     */
+    #[Route('/resend_link', name: 'app_resend_link', methods: ['GET','POST'])]
+    public function resendActivationLink(JWTService $jwt, SendMailService $mailService, UserRepository $userRepository,Request $request):Response
+    {
+        $username = $request->get('user_name');
+        $user = $userRepository->findOneBy(['username'=>$username]);
+
+        if (isset($user)){
+            if (!$user->getIsEnable()){
+                // Generation of the jwt
+                // Creation of the header
+                $header = [
+                    'typ' => 'JWT',
+                    'alg' => 'HS256'
+                ];
+
+                // Creation of the payload
+                $payload = [
+                    'user_id' => $user->getId()
+                ];
+
+                // Generation of the token
+                $token = $jwt->generate($header, $payload, $this->getParameter('jwt_secret'));
+
+                // Sends the email
+                $mailService->send(
+                    'no-reply@snowtricks.fr',
+                    $user->getEmail(),
+                    'Activation de votre compte sur le site snowtricks',
+                    ['user'=>$user,'token'=>$token]
+
+                );
+
+                $this->addFlash('success', 'Le lien d\'activation à été envoyé avec succès !');
+
+                return $this->redirectToRoute('app_home');
+            }else{
+                $this->addFlash('warning','Votre compte est déjà activé !');
+                return $this->redirectToRoute('app_login');
+            }
+        }else{
+            $this->addFlash('warning','L\'utilisateur n\'existe pas');
+            return $this->redirectToRoute('app_login');
+        }
+
+    }
+
+
+    /**
      *  This function verify the token
      *
      * @param $token
@@ -103,10 +163,69 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('app_home');
             }
         }
-        // Ici un problème se pose dans le token
         $this->addFlash('danger', 'Le token est invalide ou a expiré');
         return $this->redirectToRoute('app_home');
     }
+
+
+    /**
+     * This function connect an user
+     *
+     * @param AuthenticationUtils $authenticationUtils
+     * @param Request $request
+     * @return Response
+     */
+    #[Route('/login',name: 'app_login',methods: ['GET','POST'])]
+    public function login(AuthenticationUtils $authenticationUtils,Request $request):Response
+    {
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+        return $this->render('user/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error'         => $error,
+        ]);
+    }
+
+
+    /**
+     * This function add flash message
+     *
+     * @return Response
+     */
+    #[Route('/login_message',name: 'app_login_message',methods: ['GET'])]
+    public function loginMessage(): Response
+    {
+        $this->addFlash('success', 'Bonjour '.$this->getUser()->getUsername().', vous êtes bien connecté !');
+        return $this->redirectToRoute('app_home');
+    }
+
+
+    /**
+     * This function disconnect a user
+     *
+     * @return void
+     */
+    #[Route('/logout',name: 'app_logout',methods: ['GET'])]
+    public function logout():void{
+        // It's symfony manage disconnection
+    }
+
+
+    /**
+     * This function add flash message
+     *
+     * @return Response
+     */
+    #[Route('/logout_message',name: 'app_logout_message',methods: ['GET'])]
+    public function logoutMessage(): Response
+    {
+        $this->addFlash('success', 'Vous êtes bien déconnecté !');
+        return $this->redirectToRoute('app_home');
+    }
+
 
 }
 
