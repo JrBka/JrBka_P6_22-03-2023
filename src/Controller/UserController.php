@@ -145,12 +145,13 @@ class UserController extends AbstractController
      *
      * @param $token
      * @param JWTService $jwt
-     * @param UserRepository $usersRepository
+     * @param UserRepository $userRepository
      * @param EntityManagerInterface $manager
+     * @param Request $request
      * @return Response
      */
     #[Route('/check/{slug}/{token}', name: 'check_token',methods: ['GET','POST'])]
-    public function verifyToken($token, JWTService $jwt, UserRepository $usersRepository, EntityManagerInterface $manager, Request $request): Response
+    public function verifyToken($token, JWTService $jwt, UserRepository $userRepository, EntityManagerInterface $manager, Request $request): Response
     {
         // Checking the token validity
         if($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check($token, $this->getParameter('jwt_secret'))){
@@ -160,7 +161,7 @@ class UserController extends AbstractController
             $payload = $jwt->getPayload($token);
 
             // Get user with the user_id of payload
-            $user = $usersRepository->find($payload['user_id']);
+            $user = $userRepository->find($payload['user_id']);
 
             // Checks if user exists and if his account isn't enabled
             if($slug == 'activation' && isset($user) && !$user->getIsEnable()){
@@ -170,11 +171,35 @@ class UserController extends AbstractController
                 $this->addFlash('success', 'Votre compte est maintenant activé !');
                 return $this->redirectToRoute('app_home');
             }elseif ($slug == 'password' && isset($user)){
-                $this->addFlash('success', 'password modification page');
-                return $this->redirectToRoute('app_registration');
+                return $this->render('user/resetPassword.html.twig',['token'=>$token]);
+            }elseif ($slug == 'newPassword' && isset($user)) {
+                $username = $request->get('_username');
+                $password = $request->get('_password');
+                return $this->redirectToRoute('app_reset_password',[
+                    'username_token'=>$user->getUsername(),
+                    'username_form'=>$username,
+                    'password'=>$password
+                    ]);
             }
         }
         $this->addFlash('danger', 'Le token est invalide ou a expiré');
+        return $this->redirectToRoute('app_home');
+    }
+
+
+    #[Route('/reset_password/{username_token}/{username_form}/{password}',name: 'app_reset_password',methods: ['GET','POST'])]
+    public function resetPassword($username_token,$username_form,$password,UserRepository $userRepository,EntityManagerInterface $manager):Response
+    {
+        if ($username_token === $username_form){
+            $user = $userRepository->findOneBy(['username'=>$username_token]);
+            $user->setPlainPassword($password);
+            $user->setPassword('');
+            $manager->persist($user);
+            $manager->flush();
+            $this->addFlash('success', 'Votre mot de passe a été modifié avec succès');
+        }else{
+            $this->addFlash('danger', 'Le nom d\'utilisateur est invalide');
+        }
         return $this->redirectToRoute('app_home');
     }
 
