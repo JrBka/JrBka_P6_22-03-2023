@@ -58,33 +58,36 @@ class CommentsController extends AbstractController
     #[Route('/comment/create',name: 'app_comments_createcomment',methods: ['POST','GET'])]
     public function createComment(Request $request, EntityManagerInterface $manager,TrickRepository $trickRepository): Response
     {
-
         $comment = new Comment();
+
+        $trickName = $request->query->get('trick');
+
+        $trick = $trickRepository->findOneBy(['name'=>$trickName]);
+        if (!isset($trick)){
+            $this->addFlash('danger', 'Cette figure n\'existe pas !');
+            return $this->redirectToRoute('app_home');
+        }
+        $comment->setTrick($trick);
+
+        $user = $this->getUser();
+        $comment->setUserId($user);
 
         $form = $this->createForm(CommentsType::class, $comment);
 
         $form->handleRequest($request);
 
-        $comment = $form->getData();
+        if ($form->isSubmitted() && $form->isValid()){
+            $comment = $form->getData();
 
-        $user = $this->getUser();
-        $comment->setUserId($user);
-
-        $slug = $request->query->get('trick');
-        $trick= $trickRepository->findOneBy(['name'=>$slug]);
-        $comment->setTrick($trick);
-
-        if (!empty($trick)){
             $manager->persist($comment);
             $manager->flush();
 
             $this->addFlash('success', 'Votre commentaire a bien été ajouté !');
-
         }else{
-            $this->addFlash('danger', 'Votre commentaire n\'a pas pu être ajouté !');
+            $this->addFlash('danger', 'Le commentaire ne peut pas être vide !');
         }
-            return $this->redirect('/tricks/details/'.$slug);
 
+        return $this->redirect('/tricks/details/'.$trickName);
     }
 
 }

@@ -44,7 +44,7 @@ class TricksType extends AbstractType
                 ],
                 'required' => true,
                 'constraints'=>[
-                    new Assert\NotBlank()
+                    new Assert\NotBlank(allowNull: false)
                 ]
             ])
             ->add('tricksGroup',TextType::class,[
@@ -96,7 +96,10 @@ class TricksType extends AbstractType
                 'label'=>'Vidéo ( balise embed )',
                 'label_attr'=>[
                     'class'=>'form-label'
-                ]
+                ],
+                'constraints'=>[
+                    new Assert\Regex(['pattern'=>'/src=\"[^\"]*\"/','match'=>true]),
+                ],
             ])
             ->add('submit',SubmitType::class,[
                 'attr'=>[

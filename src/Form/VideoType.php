@@ -8,13 +8,15 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validation;
 
 class VideoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('video',TextareaType::class,[
+            ->add('video',TextareaType::class, [
                 'required'=>true,
                 'mapped' => false,
                 'attr'=>[
@@ -23,7 +25,11 @@ class VideoType extends AbstractType
                 'label'=>'Vidéo ( balise embed )',
                 'label_attr'=>[
                     'class'=>'form-label'
-                ]
+                ],
+                'constraints'=>[
+                    new Assert\NotBlank(),
+                    new Assert\Regex(['pattern'=>'/src=\"[^\"]*\"/','match'=>true]),
+                ],
             ])
             ->add('submit',SubmitType::class,[
                 'attr'=>[

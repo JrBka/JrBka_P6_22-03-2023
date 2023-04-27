@@ -110,11 +110,10 @@ class TricksController extends AbstractController
                     // Removes the picture in 'images' directory
                     $trickRepository->remove($trick,$removeImage,$images,true);
                     $this->addFlash('success', 'Votre figure a bien été supprimé');
-                    return $this->redirectToRoute('app_home');
                 }else{
                     $this->addFlash('danger', 'Vous n\'êtes pas autorisé à effectuer cette action !');
-                    return $this->redirectToRoute('app_home');
                 }
+                return $this->redirectToRoute('app_home');
         }
 
         // Creation oh the form
@@ -154,11 +153,14 @@ class TricksController extends AbstractController
                 $srcVideos = ($slug == 'create') ? [] : $videos;
                 //Get content of 'src' in the tag
                 preg_match_all('/src=\"[^\"]*\"/', $newVideos, $result);
-                if (isset($result[0])){
+                if (!empty($result[0])){
                     foreach ($result[0] as $src){
                         $src = explode("\"", $src);
-                        $srcVideos [] = $src[1];
+                            $srcVideos [] = $src[1];
                     }
+                }else{
+                    $this->addFlash('danger', 'Balise video invalide !');
+                    return $this->redirectToRoute('app_home');
                 }
                 $trick->setVideos($srcVideos);
             }
@@ -211,10 +213,11 @@ class TricksController extends AbstractController
         // Get Trick entity
         $trick = $trickRepository->findOneBy(['name' => $trickName]);
 
+        // Checks if the current user is the same as the user who created the trick
         if ($this->getUser() !== $trick->getUser()){
             $this->addFlash('danger', 'Vous n\'êtes pas autorisé à accéder à ce contenu !');
             return $this->redirectToRoute('app_home');
-        }else{
+        }else {
             // Get pictures array
             $pictures = $trick->getPictures();
             if (isset($pictures[$index])) {
@@ -223,7 +226,7 @@ class TricksController extends AbstractController
 
             // Get videos array
             $videos = $trick->getVideos();
-            if (isset($videos[$index])){
+            if (isset($videos[$index])) {
                 $video = $videos[$index];
             }
 
@@ -231,23 +234,24 @@ class TricksController extends AbstractController
             $formType = ($slug == 'updatePicturePage' || $slug == 'updatePicture' ? PictureType::class : VideoType::class);
             $form = $this->createForm($formType, $trick);
 
-            //Get the request
-            $form->handleRequest($request);
-
-            switch ($slug){
+            switch ($slug) {
                 case 'updatePicturePage':
-                     return $this->render('tricks/updatePicture.html.twig',[
-                        'form'=>$form->createView(),
-                        'trickName'=>$trickName,
-                        'index'=>$index,
-                        'picture'=>$image
-                    ]);
+                    if (isset($image)){
+                        return $this->render('tricks/updatePicture.html.twig', [
+                            'form' => $form->createView(),
+                            'trickName' => $trickName,
+                            'index' => $index,
+                            'picture' => $image
+                        ]);
+                    }else{
+                        return $this->redirect('/tricks/update/'.$trickName);
+                    }
                 case 'updateVideoPage':
-                    return $this->render('tricks/updateVideo.html.twig',[
-                        'form'=>$form->createView(),
-                        'trickName'=>$trickName,
-                        'index'=>$index,
-                        'video'=>$video
+                    return $this->render('tricks/updateVideo.html.twig', [
+                        'form' => $form->createView(),
+                        'trickName' => $trickName,
+                        'index' => $index,
+                        'video' => $video
                     ]);
                 case 'deleteVideo':
                     //Remove video from array 'videos' and sort
@@ -262,13 +266,18 @@ class TricksController extends AbstractController
                     break;
             }
 
+            //Get the request
+            $form->handleRequest($request);
+
             if ($form->isSubmitted()) {
+                if ($form->isValid()) {
+
                 if ($slug == 'updatePicture') {
                     // Define a new name for the image
-                    $file = $form->get('images')->getData();
+                    $file = $form->get('newPicture')->getData();
                     $newFilename = time() . uniqid() . '.' . $file->guessExtension();
                     // Saves the image in 'images' directory
-                    $moveImage->moveImages($file,$newFilename);
+                    $moveImage->moveImages($file, $newFilename);
                     // Removes the old image
                     $removeImage->removeImages([$image]);
                     //Replace the old picture with the new one in the 'picture' array of the trick entity
@@ -277,13 +286,22 @@ class TricksController extends AbstractController
                     // Extract the src of the embed tag
                     $newVideo = $form->get('video')->getData();
                     preg_match('/src=\"[^\"]*\"/', $newVideo, $result);
-                    if (isset($result[0])){
+                    if (!empty($result[0])) {
                         $newVideo = explode("\"", $result[0]);
+                    } else {
+                        $this->addFlash('danger', 'Balise video invalide !');
+                        return $this->redirectToRoute('app_home');
                     }
                     //Replace the old picture with the new one in the 'picture' array of the trick entity
-                    $videos = array_replace($videos, [$index=> $newVideo[1]]);
+                    $videos = array_replace($videos, [$index => $newVideo[1]]);
                 }
+
+                }else {
+
+                $this->addFlash('danger', 'Media invalide');
+                return $this->redirect('/tricks/update/' . $trickName);
             }
+        }
 
             // Sets new trick entity values and saves them to the database
             $trick->setVideos($videos);
@@ -291,8 +309,9 @@ class TricksController extends AbstractController
             $manager->persist($trick);
             $manager->flush();
 
+
+            //Remove the image in 'images' directory
             if ($slug == 'deletePicture' || $slug == 'updatePicture' ){
-                //Remove the image in 'images' directory
                 $imageToBeDeleted = $this->getParameter('images_directory').'/'.$image;
                 if (file_exists($imageToBeDeleted)){
                     unlink($imageToBeDeleted);
@@ -300,7 +319,7 @@ class TricksController extends AbstractController
             }
 
             // Redirect to updateTrick page and show flash message
-            $var = $slug == 'deletePicture' || $slug == 'deleteVideo' ? 'supprimé' : 'modifié';
+            $var = ($slug == 'deletePicture' || $slug == 'deleteVideo' ? 'supprimé' : 'modifié');
             $this->addFlash('success', 'Votre image a bien été '.$var);
             return $this->redirect('/tricks/update/'.$trickName);
         }

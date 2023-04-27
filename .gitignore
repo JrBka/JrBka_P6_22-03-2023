@@ -22,5 +22,5 @@
 migrations
 .env
 .env.test
-
+.idea
 /public/images

@@ -134,7 +134,11 @@ class Trick
 
     public function getPictures(): ?array
     {
-        return $this->pictures;
+        if ($this->pictures != null){
+            return $this->pictures;
+        }else{
+            return [];
+        }
     }
 
     public function setPictures(?array $pictures): self

@@ -7,17 +7,17 @@
         <div class="border min-vh-100 ">
             <div class="w-auto m-auto " style="height: 50vh; background: center/ cover no-repeat url({{ asset('images/snowboard.jpg') }})">
                 <div class="position-relative px-4 px-lg-5 h-100 mw-100 d-flex justify-content-center align-items-center" style="background-color: black; opacity: 0.7">
-                    <h1 style="font-size: 68px" >Modification de la video</h1>
+                    <h1 class="text-center" style="font-size: 64px" >Modification de la video</h1>
                 </div>
             </div>
             <h2 class="text-center my-4">Changer la video</h2>
-            <div class="px-2 px-md-5 px-xl-2 d-flex justify-content-center flex-wrap ">
-                <div class=" mx-auto my-3 m-xl-4 border "  >
-                    <iframe class="my-2 mx-1 mx-lg-2 col-10 col-lg-3" style="width: 400px; height: 300px" src="{{ video }}" allowfullscreen></iframe>
+            <div class="my-3 my-md-5 d-flex justify-content-center flex-wrap">
+                <div class="col-10 col-md-5 col-lg-3">
+                    <iframe class="w-100" style="height: 250px" src="{{ video }}" allowfullscreen></iframe>
                 </div>
             </div>
             <div class="d-flex justify-content-center my-4">
-                <div class="col-8 col-lg-6">
+                <div class="col-10 col-lg-6">
                     {{ form_start(form,{'action':path('app_tricks_editmedia',{'trickName':trickName,'slug':'updateVideo','mediaIndex':index})}) }}
                     <div class="form-group">
                         {{ form_label(form.video) }}

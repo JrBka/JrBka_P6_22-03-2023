@@ -42,17 +42,17 @@
             {% if trick.pictures %}
 
                 <h2 class="text-center my-4">{{ trick.name }} en image</h2>
-                <div class="px-2 px-md-5 px-xl-2 d-flex justify-content-start flex-wrap border">
+                <div class="d-flex justify-content-center flex-wrap border">
 
                     {% for picture in trick.pictures %}
 
-                        <div class=" col-12 col-lg-1 mx-auto my-3 m-xl-4" style="width: 300px; height: 400px" >
-                            <a class="h-100 text-decoration-none d-flex justify-content-center overflow-hidden"
-                               style="cursor: pointer; background: center/ cover no-repeat url({{ asset('images/'~picture) }})" data-toggle="modal" data-target="#carousel{{ loop.index0 }}"></a>
+                        <div class="card my-3 my-xl-4 mx-auto mx-md-3 mx-xl-4 col-10 col-md-5 col-xl-2" style="height: 400px" >
+                            <a class="h-100 w-100  text-decoration-none"
+                               style="cursor: pointer; background: center/ cover no-repeat url({{ asset('images/'~picture) }})" data-toggle="modal" data-target="#modal{{ loop.index0 }}"></a>
                         </div>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="carousel{{ loop.index0 }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal fade" id="modal{{ loop.index0 }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header d-flex justify-content-end">
@@ -70,9 +70,11 @@
 
             {% if trick.videos %}
                 <h2 class="text-center my-4">{{ trick.name }} en video</h2>
-                <div class="p-lg-2 d-flex justify-content-center justify-content-md-start flex-wrap border">
+                <div class="d-flex justify-content-center flex-wrap border">
                     {% for video in trick.videos %}
-                        <iframe class="my-2 mx-1 mx-lg-2 col-10 col-lg-3" style="height: 300px; width: 400px; " src="{{ video }}" allowfullscreen></iframe>
+                        <div class="card my-3 my-xl-4 mx-auto mx-md-3 mx-xl-4 col-10 col-md-5 col-xl-2" style="height: 250px">
+                            <iframe class="h-100" src="{{ video }}" allowfullscreen></iframe>
+                        </div>
                     {% endfor %}
 
                 </div>

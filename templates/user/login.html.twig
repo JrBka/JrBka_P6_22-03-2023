@@ -4,8 +4,8 @@
 
 {% block body %}
     <section class="d-flex flex-column align-items-center " style="height: 90vh">
-        <div class="col-8 col-lg-3 my-auto">
-            <h1 class="mb-5 text-center" style="font-size: 68px" >Connexion</h1>
+        <h1 class="mb-5 text-center my-5" style="font-size: 68px" >Connexion</h1>
+        <div class="col-10 col-md-8 col-lg-3 my-2">
             {% if error %}
                 <div class="text-danger mb-5">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
             {% endif %}

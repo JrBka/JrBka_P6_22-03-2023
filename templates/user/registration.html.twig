@@ -3,9 +3,9 @@
 {% block title %}SnowTricks - Registration{% endblock %}
 
 {% block body %}
-    <section class="d-flex flex-column align-items-center " style="height: 90vh">
-        <div class="col-8 col-lg-3 my-auto">
-            <h1 class="mb-5 text-center" style="font-size: 68px" >Inscription</h1>
+    <section class="d-flex flex-column align-items-center" style="height: 90vh">
+        <h1 class="mb-5 text-center my-5" style="font-size: 68px" >Inscription</h1>
+        <div class="col-10 col-md-8 col-lg-3 my-2">
 
             {{ form_start(form) }}
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
@@ -33,8 +33,10 @@
             <div class="form-group mt-5">
                 {{ form_row(form.submit) }}
             </div>
-
             {{ form_end(form) }}
+            <div class="text-center mt-4">
+                <a href="{{ path('app_login') }}" class="mt-4 mx-auto">Vous avez déjà un compte ?</a>
+            </div>
         </div>
     </section>
 {% endblock %}

@@ -1,7 +1,7 @@
 
         <section class="d-flex flex-column align-items-center">
             <h2 class="my-5" >Ajouter un commentaire</h2>
-            <div class="col-8 col-lg-6">
+            <div class="col-10 col-md-8 col-lg-6">
 
                 {{ form_start(form,{'action': path('app_comments_createcomment',{'trick':trick.name}), 'method': 'POST'}) }}
 

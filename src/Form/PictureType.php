@@ -17,7 +17,7 @@ class PictureType extends AbstractType
     {
         $builder
 
-            ->add('images', FileType::class, [
+            ->add('newPicture', FileType::class, [
                 'attr'=>[
                     'class'=> 'form-control mb-4'
                 ],
