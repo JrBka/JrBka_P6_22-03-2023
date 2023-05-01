@@ -30,10 +30,6 @@ class RegistrationType extends AbstractType
                     'class'=>'form-label'
                 ],
                 'required' => true,
-                'constraints'=>[
-                    new Assert\Length(['max'=>180]),
-                    new Assert\NotBlank()
-                ]
             ])
             ->add('plainPassword', RepeatedType::class,[
                 'type' => PasswordType::class,
@@ -60,6 +56,7 @@ class RegistrationType extends AbstractType
                 'constraints' => new Assert\Regex(['pattern' => '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?([^\w\s]|[_])).{8,}$/',
                     'match' => true,
                     'message' => 'Votre mot de passe doit comporter au moins huit caractères, dont des lettres majuscules et minuscules, un chiffre et un symbole',
+
                 ]),
                 'mapped'=>false
             ])
@@ -73,11 +70,7 @@ class RegistrationType extends AbstractType
                     'class'=>'form-label'
                 ],
                 'required' => true,
-                'constraints'=>[
-                    new Assert\Email(),
-                    new Assert\Length(['max'=>255]),
-                    new Assert\NotBlank()
-                ]
+
             ])
             ->add('submit',SubmitType::class,[
                 'attr'=>[

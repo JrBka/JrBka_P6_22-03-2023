@@ -29,23 +29,23 @@ class Trick
      * @var string|null
      */
     #[ORM\Column(length: 100)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 100)]
+    #[Assert\NotBlank(message: 'Ce champs ne peut être vide ou nul !')]
+    #[Assert\Length(max: 100,maxMessage: 'Le nom d\'une figure ne peut excéder 100 caractères !')]
     private ?string $name = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'Ce champs ne peut être vide ou nul !')]
     private ?string $description = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(length: 50)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 50)]
+    #[Assert\NotBlank(message: 'Ce champs ne peut être vide ou nul !')]
+    #[Assert\Length(max: 50,maxMessage: 'Le nom d\'un groupe ne peut excéder 50 caractères !')]
     private ?string $tricksGroup = null;
 
     /**
@@ -101,7 +101,7 @@ class Trick
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -113,7 +113,7 @@ class Trick
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
@@ -125,7 +125,7 @@ class Trick
         return $this->tricksGroup;
     }
 
-    public function setTricksGroup(string $tricksGroup): self
+    public function setTricksGroup(?string $tricksGroup): self
     {
         $this->tricksGroup = $tricksGroup;
 

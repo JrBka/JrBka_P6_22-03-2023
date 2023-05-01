@@ -30,11 +30,13 @@ class PictureType extends AbstractType
                 'constraints' => [
                         new File([
                             'maxSize' => '1024k',
+                            'maxSizeMessage'=> 'La taille d\'image maximale autorisé est de 1024KB',
                             'mimeTypes' => [
                                 'image/png',
                                 'image/jpeg',
                                 'image/webp'
-                            ]
+                            ],
+                            'mimeTypesMessage'=> 'Les extensions autorisé sont ( .png , .jpeg , .webp )',
                         ])
                 ]
             ])

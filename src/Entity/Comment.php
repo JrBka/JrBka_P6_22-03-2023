@@ -24,7 +24,7 @@ class Comment
      * @var string|null
      */
     #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'Ce champs ne peut être vide ou nul !')]
     private ?string $content = null;
 
     /**
@@ -63,12 +63,12 @@ class Comment
         return $this->id;
     }
 
-    public function getUserId(): User
+    public function getUserId(): ?User
     {
         return $this->userId;
     }
 
-    public function setUserId(User $userId): self
+    public function setUserId(?User $userId): self
     {
         $this->userId = $userId;
 
@@ -80,7 +80,7 @@ class Comment
         return $this->content;
     }
 
-    public function setContent(string $content): self
+    public function setContent(?string $content): self
     {
         $this->content = $content;
 

@@ -28,8 +28,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string|null
      */
     #[ORM\Column(length: 180, unique: true)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 180)]
+    #[Assert\NotBlank(message: 'Ce champs ne peut être vide ou nul !')]
+    #[Assert\Length(max: 180,maxMessage: 'Le nom d\'utilisateur ne peut excéder 180 caractères !')]
     private ?string $username = null;
 
     /**
@@ -61,8 +61,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string|null
      */
     #[ORM\Column(length: 255)]
-    #[Assert\Email]
-    #[Assert\Length(max: 255)]
+    #[Assert\Email(message: 'Ceci n\'est pas une adresse email valide !')]
+    #[Assert\Length(max: 255,maxMessage: 'Le nom d\'utilisateur ne peut excéder 255 caractères !')]
     private ?string $email = null;
 
     /**
@@ -108,7 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername(string $username): self
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
 
@@ -137,7 +137,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
+    public function setRoles(?array $roles): self
     {
         $this->roles = $roles;
 
@@ -149,7 +149,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->plainPassword;
     }
 
-    public function setPlainPassword(string $plainPassword): self
+    public function setPlainPassword(?string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
 
@@ -159,12 +159,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
@@ -208,19 +208,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
         return $this;
     }
 
-    public function getIsEnable(): bool
+    public function getIsEnable(): ?bool
     {
         return $this->isEnable;
     }
 
-    public function setIsEnable(bool $isEnable): self
+    public function setIsEnable(?bool $isEnable): self
     {
         $this->isEnable = $isEnable;
 

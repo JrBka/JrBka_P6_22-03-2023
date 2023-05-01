@@ -39,46 +39,81 @@
                     </div>
                 </div>
             </div>
-            {% if trick.pictures %}
-
-                <h2 class="text-center my-4">{{ trick.name }} en image</h2>
-                <div class="d-flex justify-content-center flex-wrap border">
-
-                    {% for picture in trick.pictures %}
-
-                        <div class="card my-3 my-xl-4 mx-auto mx-md-3 mx-xl-4 col-10 col-md-5 col-xl-2" style="height: 400px" >
-                            <a class="h-100 w-100  text-decoration-none"
-                               style="cursor: pointer; background: center/ cover no-repeat url({{ asset('images/'~picture) }})" data-toggle="modal" data-target="#modal{{ loop.index0 }}"></a>
-                        </div>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="modal{{ loop.index0 }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header d-flex justify-content-end">
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <img class="w-100 h-100" src="{{ asset('images/'~picture)  }}" alt="snowboard-trick">
-                                </div>
+            {% if trick.pictures or trick.videos %}
+                <div class="d-flex d-md-none justify-content-center mt-4">
+                    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#modalMedia">Voir les medias</button>
+                </div>
+                <!-- Modal -->
+                <div  class="modal fade text-dark" id="modalMedia" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-dark" >{{ trick.name }} images et vidéos</h5>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {% if trick.pictures %}
+                                    {% for picture in trick.pictures %}
+                                        <div class="card my-3 my-xl-4 mx-auto mx-md-3 mx-xl-4 col-10 col-md-5 col-xl-2" style="height: 400px" >
+                                            <a class="h-100 w-100  text-decoration-none"
+                                               style="cursor: pointer; background: center/ cover no-repeat url({{ asset('images/'~picture) }})"></a>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                {% if trick.videos %}
+                                    {% for video in trick.videos %}
+                                        <div class="card my-3 my-xl-4 mx-auto mx-md-3 mx-xl-4 col-10 col-md-5 col-xl-2" style="height: 250px">
+                                            <iframe class="h-100" src="{{ video }}" allowfullscreen></iframe>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                         </div>
-                    {% endfor %}
+                    </div>
                 </div>
             {% endif %}
+            <div class="d-none d-md-block">
+                {% if trick.pictures %}
+                    <h2 class="text-center my-4">{{ trick.name }} en image</h2>
+                    <div class="d-flex justify-content-center flex-wrap border">
 
-            {% if trick.videos %}
-                <h2 class="text-center my-4">{{ trick.name }} en video</h2>
-                <div class="d-flex justify-content-center flex-wrap border">
-                    {% for video in trick.videos %}
-                        <div class="card my-3 my-xl-4 mx-auto mx-md-3 mx-xl-4 col-10 col-md-5 col-xl-2" style="height: 250px">
-                            <iframe class="h-100" src="{{ video }}" allowfullscreen></iframe>
-                        </div>
-                    {% endfor %}
+                        {% for picture in trick.pictures %}
 
-                </div>
-            {% endif %}
+                            <div class="card my-3 my-xl-4 mx-auto mx-md-3 mx-xl-4 col-10 col-md-5 col-xl-2" style="height: 400px" >
+                                <a class="h-100 w-100  text-decoration-none"
+                                   style="cursor: pointer; background: center/ cover no-repeat url({{ asset('images/'~picture) }})" data-toggle="modal" data-target="#modal{{ loop.index0 }}"></a>
+                            </div>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="modal{{ loop.index0 }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header d-flex justify-content-end">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <img class="w-100 h-100" src="{{ asset('images/'~picture)  }}" alt="snowboard-trick">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if trick.videos %}
+                    <h2 class="text-center my-4">{{ trick.name }} en video</h2>
+                    <div class="d-flex justify-content-center flex-wrap border">
+                        {% for video in trick.videos %}
+                            <div class="card my-3 my-xl-4 mx-auto mx-md-3 mx-xl-4 col-10 col-md-5 col-xl-2" style="height: 250px">
+                                <iframe class="h-100" src="{{ video }}" allowfullscreen></iframe>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
 
             <div class="container d-flex flex-column align-items-center">
                 <h2 class="text-center my-4">Description de la figure</h2>

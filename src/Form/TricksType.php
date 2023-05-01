@@ -28,10 +28,6 @@ class TricksType extends AbstractType
                     'class'=>'form-label'
                 ],
                 'required' => true,
-                'constraints'=>[
-                    new Assert\Length(['max'=>100]),
-                    new Assert\NotBlank()
-                ]
             ])
             ->add('description',TextareaType::class,[
                 'attr'=>[
@@ -43,9 +39,6 @@ class TricksType extends AbstractType
                     'class'=>'form-label'
                 ],
                 'required' => true,
-                'constraints'=>[
-                    new Assert\NotBlank(allowNull: false)
-                ]
             ])
             ->add('tricksGroup',TextType::class,[
                 'attr'=>[
@@ -56,10 +49,6 @@ class TricksType extends AbstractType
                     'class'=>'form-label'
                 ],
                 'required' => true,
-                'constraints'=>[
-                    new Assert\Length(['max'=>50]),
-                    new Assert\NotBlank()
-                ]
             ])
             ->add('images', FileType::class, [
                 'multiple' => true,
@@ -78,11 +67,13 @@ class TricksType extends AbstractType
 
                     new File([
                         'maxSize' => '1024k',
+                        'maxSizeMessage'=> 'La taille d\'image maximale autorisé est de 1024KB',
                         'mimeTypes' => [
                             'image/png',
                             'image/jpeg',
                             'image/webp'
-                        ]
+                        ],
+                        'mimeTypesMessage'=> 'Les extensions autorisé sont ( .png , .jpeg , .webp )',
                     ])
                     ])
                 ]
@@ -98,7 +89,9 @@ class TricksType extends AbstractType
                     'class'=>'form-label'
                 ],
                 'constraints'=>[
-                    new Assert\Regex(['pattern'=>'/src=\"[^\"]*\"/','match'=>true]),
+                    new Assert\Regex(['pattern'=>'/src=\"[^\"]*\"/',
+                        'match'=>true,
+                        'message' => 'Vous devez renseigner une balise embed valide !']),
                 ],
             ])
             ->add('submit',SubmitType::class,[

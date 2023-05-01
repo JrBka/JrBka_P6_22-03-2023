@@ -28,7 +28,10 @@ class VideoType extends AbstractType
                 ],
                 'constraints'=>[
                     new Assert\NotBlank(),
-                    new Assert\Regex(['pattern'=>'/src=\"[^\"]*\"/','match'=>true]),
+                    new Assert\Regex(['pattern'=>'/src=\"[^\"]*\"/',
+                        'match'=>true,
+                        'message' => 'Vous devez renseigner une balise embed valide !'
+                    ]),
                 ],
             ])
             ->add('submit',SubmitType::class,[

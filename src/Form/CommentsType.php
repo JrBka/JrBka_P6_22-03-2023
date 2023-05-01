@@ -26,9 +26,6 @@ class CommentsType extends AbstractType
                     'class'=>'form-label'
                 ],
                 'required' => true,
-                'constraints'=>[
-                    new Assert\NotBlank()
-                ]
             ])
             ->add('submit',SubmitType::class,[
                 'attr'=>[

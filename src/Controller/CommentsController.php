@@ -52,11 +52,12 @@ class CommentsController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $manager
      * @param TrickRepository $trickRepository
+     * @param CommentRepository $commentRepository
      * @return Response
      */
     #[isGranted('ROLE_USER')]
     #[Route('/comment/create',name: 'app_comments_createcomment',methods: ['POST','GET'])]
-    public function createComment(Request $request, EntityManagerInterface $manager,TrickRepository $trickRepository): Response
+    public function createComment(Request $request, EntityManagerInterface $manager,TrickRepository $trickRepository,CommentRepository $commentRepository): Response
     {
         $comment = new Comment();
 
@@ -72,6 +73,12 @@ class CommentsController extends AbstractController
         $user = $this->getUser();
         $comment->setUserId($user);
 
+        $trickId = $trick->getId();
+
+        $page = $request->query->getInt('page',1);
+
+        $comments = $this->getComments($commentRepository,$page,$trickName,$trickId);
+
         $form = $this->createForm(CommentsType::class, $comment);
 
         $form->handleRequest($request);
@@ -83,11 +90,14 @@ class CommentsController extends AbstractController
             $manager->flush();
 
             $this->addFlash('success', 'Votre commentaire a bien été ajouté !');
-        }else{
-            $this->addFlash('danger', 'Le commentaire ne peut pas être vide !');
         }
 
-        return $this->redirect('/tricks/details/'.$trickName);
+
+        return $this->render('tricks/showTrick.html.twig',[
+            'trick'=>$trick,
+            'comments'=>$comments,
+            'form'=>$form
+        ]);
     }
 
 }
