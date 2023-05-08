@@ -45,13 +45,13 @@
                                                         <a class="btn text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'updatePicture','mediaIndex':loop.index0}) }}"><i class="fa-solid fa-pencil"></i></a>
                                                     </button>
                                                     <!-- Button trigger modal delete -->
-                                                    <button type="button" class="btn btn-outline-danger text-light ms-2"  data-toggle="modal" data-target="#modalDeleteImage{{ loop.index0 }}">
+                                                    <button type="button" class="btn btn-outline-danger text-light ms-2"  data-toggle="modal" data-target="#modalDeleteImageMobile{{ loop.index0 }}">
                                                         <i class="fa-solid fa-trash-can"></i>
                                                     </button>
                                                 </div>
                                             </div>
                                             <!-- Delete modal -->
-                                            <div  class="modal fade text-dark" id="modalDeleteImage{{ loop.index0 ? loop.index0 : 0}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                            <div  class="modal fade text-dark" id="modalDeleteImageMobile{{ loop.index0 ? loop.index0 : 0}}" tabindex="-1" role="dialog" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -80,13 +80,13 @@
                                                         <a class="btn text-light" href="{{ path('app_tricks_editmedia',{'trickName':trick.name,'slug':'updateVideo','mediaIndex':loop.index0}) }}"><i class="fa-solid fa-pencil"></i></a>
                                                     </button>
                                                     <!-- Button trigger modal delete -->
-                                                    <button type="button" class="btn btn-outline-danger text-light ms-2"  data-toggle="modal" data-target="#modalDeleteVideo{{ loop.index0 }}">
+                                                    <button type="button" class="btn btn-outline-danger text-light ms-2"  data-toggle="modal" data-target="#modalDeleteVideoMobile{{ loop.index0 }}">
                                                         <i class="fa-solid fa-trash-can"></i>
                                                     </button>
                                                 </div>
                                             </div>
                                             <!-- Delete modal -->
-                                            <div  class="modal fade text-dark" id="modalDeleteVideo{{ loop.index0 }}" tabindex="-1" role="dialog" aria-hidden="true">
+                                            <div  class="modal fade text-dark" id="modalDeleteVideoMobile{{ loop.index0 }}" tabindex="-1" role="dialog" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">

@@ -304,7 +304,7 @@ class TricksController extends AbstractController
                     //Remove video from array 'videos' and sort
                     unset($videos[$index]);
                     sort($videos);
-                    $this->addFlash('success', 'Votre image a bien été supprimé !');
+                    $this->addFlash('success', 'Votre vidéo a bien été supprimé !');
                     break;
                 case 'deletePicture':
                     //Remove image from array 'pictures' and sort

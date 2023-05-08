@@ -134,7 +134,7 @@ class Trick
 
     public function getPictures(): ?array
     {
-        if ($this->pictures != null){
+        if ($this->pictures !== null){
             return $this->pictures;
         }else{
             return [];
