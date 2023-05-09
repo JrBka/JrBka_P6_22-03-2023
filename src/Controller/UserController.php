@@ -236,7 +236,11 @@ class UserController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
 
         if (!empty($error)){
-            $error = "Identifiant ou mot de passe invalide !";
+            if ($error->getMessage() == 'Bad credentials.' || $error->getMessage() == 'Invalid credentials.' ){
+                    $error = "Identifiant ou mot de passe invalide !";
+            }else{
+                $error = $error->getMessage();
+            }
         }
 
         // last username entered by the user

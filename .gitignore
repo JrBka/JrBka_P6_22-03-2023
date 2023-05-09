@@ -22,4 +22,5 @@
 migrations
 .env
 .env.test
+
 /public/images
