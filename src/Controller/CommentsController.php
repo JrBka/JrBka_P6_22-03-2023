@@ -77,8 +77,6 @@ class CommentsController extends AbstractController
 
         $page = $request->query->getInt('page',1);
 
-        $comments = $this->getComments($commentRepository,$page,$trickName,$trickId);
-
         $form = $this->createForm(CommentsType::class, $comment);
 
         $form->handleRequest($request);
@@ -92,6 +90,7 @@ class CommentsController extends AbstractController
             $this->addFlash('success', 'Votre commentaire a bien été ajouté !');
         }
 
+        $comments = $this->getComments($commentRepository,$page,$trickName,$trickId);
 
         return $this->render('tricks/showTrick.html.twig',[
             'trick'=>$trick,
